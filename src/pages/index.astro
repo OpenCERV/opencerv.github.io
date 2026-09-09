@@ -1,0 +1,286 @@
+---
+import { getCollection } from 'astro:content';
+import ActivityCard from '../components/ActivityCard.astro';
+import Button from '../components/Button.astro';
+import CTA from '../components/CTA.astro';
+import CommunityModel from '../components/CommunityModel.astro';
+import EcosystemGroup from '../components/EcosystemGroup.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+import PillarCard from '../components/PillarCard.astro';
+import Roadmap from '../components/Roadmap.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import FlowDiagram from '../components/diagrams/FlowDiagram.astro';
+import { site } from '../config/site';
+import { isPublished, sortActivities } from '../lib/content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const activities = sortActivities((await getCollection('activities')).filter(isPublished)).slice(
+  0,
+  3,
+);
+
+const OPENCERV_TRACKS = [
+  {
+    label: 'AI @ Edge',
+    icon: 'chip' as const,
+    items: [
+      'Reference platforms',
+      'Low-bit and vector kernels',
+      'RISC-V AI accelerator IP',
+      'Hardware/software examples',
+    ],
+  },
+  {
+    label: 'Security',
+    icon: 'shield' as const,
+    items: [
+      'PQC and cryptographic accelerator IP',
+      'Secure RISC-V reference systems',
+      'Security benchmarks',
+      'Test frameworks',
+    ],
+  },
+];
+
+const OUTPUTS = ['Code', 'IP', 'Documentation', 'Benchmarks', 'Tutorials', 'Demos'];
+
+const ECOSYSTEM = [
+  {
+    heading: 'Hong Kong',
+    icon: 'building' as const,
+    organizations: [
+      'Hong Kong Institute of Science & Innovation, Chinese Academy of Sciences (CAS)',
+      'Hong Kong RISC-V Alliance (HKRVA)',
+      'Student open-source communities at universities',
+    ],
+  },
+  {
+    heading: 'Open Source & Education',
+    icon: 'book-open' as const,
+    organizations: [
+      'RIOS',
+      'Beijing Institute of Open Source Chip (BOSC) / 一生一芯',
+      'RVOH Open Innovation Academy',
+    ],
+  },
+  {
+    heading: 'Global Ecosystem',
+    icon: 'globe' as const,
+    organizations: ['RISC-V International'],
+  },
+];
+---
+
+<BaseLayout
+  exactTitle={`${site.name} | Edge AI & Security`}
+  title={site.name}
+  description={site.description}
+>
+  <Hero />
+
+  <!-- Two technical pillars -->
+  <Section labelledby="pillars-heading">
+    <SectionHeading
+      id="pillars-heading"
+      eyebrow="Technical focus"
+      title="Two Technical Pillars"
+      lead="The community's technical work centres on two areas, and on the point where they meet: efficient computation on constrained hardware that can also be trusted."
+    />
+    <div class="mt-10 grid gap-5 lg:grid-cols-2">
+      <PillarCard
+        eyebrow="Edge AI"
+        title="Efficient Intelligence at the Edge"
+        icon="chip"
+        accent="navy"
+        topics={[
+          'RISC-V / FPGA hardware-software co-design',
+          'Vector and custom instruction acceleration',
+          'Lightweight AI inference',
+          'Edge AI accelerators',
+          'Efficient architectures for resource-constrained devices',
+        ]}
+        flow={[
+          { label: 'Sensors / Devices', icon: 'pulse' },
+          { label: 'RISC-V Processor', icon: 'cpu', link: 'to', accent: true },
+          { label: 'AI Accelerator', icon: 'chip', link: 'to' },
+        ]}
+        flowSummary="Data flows from sensors and devices to a RISC-V processor, and from there to an AI accelerator."
+      />
+      <PillarCard
+        eyebrow="Security"
+        title="Secure Computing by Design"
+        icon="shield"
+        accent="crimson"
+        topics={[
+          'Cryptographic hardware',
+          'Post-Quantum Cryptography',
+          'Fully Homomorphic Encryption',
+          'Secure RISC-V platforms',
+          'Hardware security',
+          'Side-channel resilience',
+        ]}
+        flow={[
+          { label: 'RISC-V Processor', icon: 'cpu', accent: true },
+          { label: 'Crypto Accelerator', icon: 'lock', link: 'both' },
+          { label: 'Security / Trust', icon: 'shield', link: 'to' },
+        ]}
+        flowSummary="A RISC-V processor and a cryptographic accelerator exchange work in both directions, together establishing security and trust."
+      />
+    </div>
+  </Section>
+
+  <!-- From research to community -->
+  <Section tone="sub" labelledby="journey-heading" compact>
+    <SectionHeading
+      id="journey-heading"
+      eyebrow="How this started"
+      title="From Research to Community"
+      lead="The community grows out of existing technical research and event experience, and turns it into something that persists between events."
+    />
+    <div class="mt-8 rounded-lg border border-line bg-surface p-5 sm:p-7">
+      <FlowDiagram
+        steps={[
+          { label: 'Research', icon: 'flask' },
+          { label: 'Events', icon: 'users', link: 'to' },
+          { label: 'Open Projects', icon: 'git-branch', link: 'to', accent: true },
+          { label: 'Ecosystem', icon: 'globe', link: 'to' },
+        ]}
+        summary="Research leads to events, events lead to open projects, and open projects lead to an ecosystem."
+      />
+    </div>
+  </Section>
+
+  <!-- Activities -->
+  <Section labelledby="activities-heading">
+    <SectionHeading
+      id="activities-heading"
+      eyebrow="Community"
+      title="Activities"
+      lead="RISC-V Days, campus tours, workshops, tutorials and technical seminars."
+      action={{ label: 'View All Activities', href: '/activities' }}
+    />
+    <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {activities.map((activity) => (
+        <ActivityCard activity={activity} />
+      ))}
+    </div>
+  </Section>
+
+  <!-- OpenCERV -->
+  <section id="opencerv" class="border-y border-navy-800 bg-navy-900 py-16 sm:py-20 lg:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <div class="max-w-2xl">
+          <p class="font-mono text-xs font-semibold tracking-[0.16em] text-accent-300 uppercase">
+            Open Source
+          </p>
+          <h2 class="mt-2.5 text-2xl text-white sm:text-3xl lg:text-[2rem]">OpenCERV</h2>
+          <p class="mt-1.5 text-lg font-medium text-navy-200">Community Open-Source Hub</p>
+          <p class="mt-4 text-base text-navy-200 sm:text-lg">
+            OpenCERV is the technical open-source home of the community: where reference platforms,
+            hardware IP, benchmarks and teaching material are developed in the open and kept
+            available between events.
+          </p>
+        </div>
+        <a
+          href={site.github.url}
+          rel="noopener"
+          class="inline-flex shrink-0 items-center gap-2 self-start rounded-md border border-white/25 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 sm:self-auto"
+        >
+          <Icon name="github" size={17} />
+          github.com/{site.github.org}
+        </a>
+      </div>
+
+      <div class="mt-10 grid gap-5 lg:grid-cols-2">
+        {OPENCERV_TRACKS.map((track) => (
+          <div class="rounded-lg border border-white/12 bg-white/[0.04] p-5 sm:p-6">
+            <h3 class="flex items-center gap-2.5 text-lg font-semibold text-white">
+              <span class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-accent-400/40 bg-accent-400/10 text-accent-300">
+                <Icon name={track.icon} size={19} />
+              </span>
+              {track.label}
+            </h3>
+            <ul class="mt-5 space-y-2.5 border-t border-white/10 pt-4">
+              {track.items.map((item) => (
+                <li class="flex gap-2.5 text-[0.9375rem] text-navy-100">
+                  <span
+                    class="mt-2 h-1 w-1 shrink-0 rounded-full bg-accent-400"
+                    aria-hidden="true"
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+
+      <div class="mt-8 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-navy-300 uppercase">
+            Outputs
+          </span>
+          {OUTPUTS.map((output) => (
+            <span class="rounded-full border border-white/15 px-3 py-1 text-xs font-medium text-navy-100">
+              {output}
+            </span>
+          ))}
+        </div>
+        <Button
+          href={site.github.url}
+          variant="inverse"
+          iconAfter="arrow-up-right"
+          class="shrink-0"
+        >
+          Explore OpenCERV
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Community model -->
+  <Section labelledby="model-heading">
+    <SectionHeading
+      id="model-heading"
+      eyebrow="How the community works"
+      title="Convene · Learn · Build · Connect"
+      lead="Four activities that reinforce each other: people meet, learn, build something open, and connect it outward."
+    />
+    <div class="mt-10">
+      <CommunityModel />
+    </div>
+  </Section>
+
+  <!-- Ecosystem -->
+  <Section tone="sub" labelledby="ecosystem-heading">
+    <SectionHeading
+      id="ecosystem-heading"
+      eyebrow="Potential Co-organizers & Ecosystem Links"
+      title="Ecosystem"
+      lead="Organisations the community works with or intends to work with. Listing here indicates a relevant ecosystem link, not a confirmed formal partnership."
+    />
+    <div class="mt-10 grid items-start gap-5 md:grid-cols-2 lg:grid-cols-3">
+      {ECOSYSTEM.map((group) => (
+        <EcosystemGroup {...group} />
+      ))}
+    </div>
+  </Section>
+
+  <!-- Roadmap -->
+  <Section labelledby="roadmap-heading">
+    <SectionHeading
+      id="roadmap-heading"
+      eyebrow="What comes next"
+      title="Roadmap"
+      lead="Three phases, in order. Each one has to work before the next is worth attempting."
+    />
+    <div class="mt-10">
+      <Roadmap />
+    </div>
+  </Section>
+
+  <CTA />
+</BaseLayout>

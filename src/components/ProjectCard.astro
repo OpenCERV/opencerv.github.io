@@ -1,0 +1,69 @@
+---
+import Badge from './Badge.astro';
+import Icon from './Icon.astro';
+import { PROJECT_CATEGORY_META, PROJECT_STATUS_META } from '../lib/content';
+import type { Project } from '../lib/content';
+import { url } from '../lib/paths';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+const category = PROJECT_CATEGORY_META[data.category];
+const status = PROJECT_STATUS_META[data.status];
+const href = url(`/projects/${project.id}`);
+---
+
+<article class="group relative flex h-full flex-col rounded-lg border border-line bg-surface p-5 transition-colors hover:border-line-strong focus-within:border-crimson-600 sm:p-6">
+  <div class="flex flex-wrap items-center gap-2">
+    <Badge icon={category.icon} classes="border-navy-200 bg-navy-50 text-navy-700">
+      {category.label}
+    </Badge>
+    <Badge classes={status.classes}>{status.label}</Badge>
+    {data.placeholder && (
+      <Badge classes="border-line-strong bg-surface-sub text-muted">Placeholder</Badge>
+    )}
+  </div>
+
+  <h3 class="mt-4 text-base leading-snug font-semibold text-balance sm:text-lg">
+    <a href={href} class="after:absolute after:inset-0 hover:text-crimson-700">
+      {data.title}
+    </a>
+  </h3>
+
+  <p class="mt-2.5 text-sm text-muted">{data.summary}</p>
+
+  {data.tags.length > 0 && (
+    <ul class="mt-4 flex flex-wrap gap-1.5">
+      {data.tags.map((tag) => (
+        <li class="rounded border border-line bg-surface-sub px-2 py-0.5 font-mono text-[0.6875rem] text-muted">
+          {tag}
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <div class="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4">
+    <span class="inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700">
+      Project details
+      <Icon name="arrow-right" size={15} class="transition-transform group-hover:translate-x-0.5" />
+    </span>
+    {data.github ? (
+      /* Sits above the card-wide link so the repository stays separately reachable. */
+      <a
+        href={data.github}
+        rel="noopener"
+        class="relative z-10 inline-flex items-center gap-1.5 text-sm text-muted hover:text-navy-900"
+      >
+        <Icon name="github" size={15} />
+        <span class="sr-only">{data.title} on </span>GitHub
+      </a>
+    ) : (
+      <span class="font-mono text-[0.6875rem] tracking-wide text-muted uppercase">
+        No repository yet
+      </span>
+    )}
+  </div>
+</article>

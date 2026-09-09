@@ -1,0 +1,195 @@
+---
+import Badge from '../components/Badge.astro';
+import Button from '../components/Button.astro';
+import CTA from '../components/CTA.astro';
+import Icon from '../components/Icon.astro';
+import type { IconName } from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+import { url } from '../lib/paths';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/**
+ * Everything here is marked "Planned" until material actually exists. As items
+ * are published, add a `href` and switch `status` to 'available'.
+ */
+const AREAS: {
+  title: string;
+  icon: IconName;
+  body: string;
+  status: 'available' | 'planned';
+  href?: string;
+}[] = [
+  {
+    title: 'Tutorials',
+    icon: 'book-open',
+    body: 'Step-by-step material from community tutorials, written up so it is usable after the session ends.',
+    status: 'planned',
+  },
+  {
+    title: 'Course Materials',
+    icon: 'graduation-cap',
+    body: 'Slides, exercises and notes from teaching, released in a form other instructors can reuse.',
+    status: 'planned',
+  },
+  {
+    title: 'FPGA Labs',
+    icon: 'terminal',
+    body: 'Hands-on lab sequences: toolchain setup, bring-up, and running a RISC-V core on real hardware.',
+    status: 'planned',
+  },
+  {
+    title: 'RISC-V Resources',
+    icon: 'cpu',
+    body: 'A curated entry point into specifications, toolchains and cores — pointing outward rather than duplicating.',
+    status: 'planned',
+  },
+  {
+    title: 'PQC Hardware Tutorials',
+    icon: 'lock',
+    body: 'Material on implementing post-quantum cryptography in hardware and attaching it to a RISC-V system.',
+    status: 'planned',
+  },
+  {
+    title: 'OpenCERV Documentation',
+    icon: 'file-text',
+    body: 'Project documentation: interfaces, build instructions and benchmark methodology.',
+    status: 'planned',
+  },
+  {
+    title: 'Development Guides',
+    icon: 'git-branch',
+    body: 'How to contribute: repository conventions, review expectations and release process.',
+    status: 'planned',
+  },
+];
+---
+
+<BaseLayout
+  title="Resources"
+  description="Tutorials, course materials, FPGA labs, RISC-V references and development guides from the CityUHK-EE RISC-V Open Community."
+>
+  <PageHeader
+    eyebrow="Knowledge"
+    title="Resources"
+    lead="Teaching and reference material from the community. This page is deliberately small at the start and grows as material is written up and released."
+    motif
+  />
+
+  <Section labelledby="areas-heading">
+    <SectionHeading
+      id="areas-heading"
+      eyebrow="What will be here"
+      title="Resource areas"
+      lead="Each area below is planned rather than published. Nothing is listed as available until it actually exists and has a link."
+    />
+
+    <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {AREAS.map((area) => (
+        <li class="flex h-full flex-col rounded-lg border border-line bg-surface p-5">
+          <div class="flex items-start justify-between gap-3">
+            <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-navy-200 bg-navy-50 text-navy-700">
+              <Icon name={area.icon} size={20} />
+            </span>
+            {area.status === 'planned' ? (
+              <Badge classes="border-line-strong bg-surface-sub text-muted">Planned</Badge>
+            ) : (
+              <Badge classes="border-emerald-300 bg-emerald-50 text-emerald-800">Available</Badge>
+            )}
+          </div>
+          <h3 class="mt-4 text-base font-semibold">{area.title}</h3>
+          <p class="mt-2 text-sm text-muted">{area.body}</p>
+          {area.href && (
+            <a
+              href={area.href}
+              class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700 hover:text-crimson-600"
+            >
+              Open
+              <Icon name="arrow-right" size={15} />
+            </a>
+          )}
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section tone="sub" labelledby="now-heading">
+    <SectionHeading id="now-heading" eyebrow="In the meantime" title="Where material lives today" />
+
+    <div class="mt-10 grid gap-5 md:grid-cols-3">
+      <a
+        href={site.github.url}
+        rel="noopener"
+        class="group flex h-full flex-col rounded-lg border border-line bg-surface p-5 transition-colors hover:border-navy-900"
+      >
+        <Icon name="github" size={22} class="text-navy-900" />
+        <h3 class="mt-4 text-base font-semibold">OpenCERV on GitHub</h3>
+        <p class="mt-2 text-sm text-muted">
+          Code, hardware IP and documentation are published in the community's GitHub organisation
+          as projects go public.
+        </p>
+        <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700">
+          github.com/{site.github.org}
+          <Icon name="arrow-up-right" size={14} />
+        </span>
+      </a>
+
+      <a
+        href={url('/activities')}
+        class="group flex h-full flex-col rounded-lg border border-line bg-surface p-5 transition-colors hover:border-navy-900"
+      >
+        <Icon name="calendar" size={22} class="text-navy-900" />
+        <h3 class="mt-4 text-base font-semibold">Activities</h3>
+        <p class="mt-2 text-sm text-muted">
+          Tutorials and workshops are recorded as activity entries, with materials attached as they
+          are collected.
+        </p>
+        <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700">
+          Browse activities
+          <Icon name="arrow-right" size={14} />
+        </span>
+      </a>
+
+      <a
+        href="https://riscv.org"
+        rel="noopener"
+        class="group flex h-full flex-col rounded-lg border border-line bg-surface p-5 transition-colors hover:border-navy-900"
+      >
+        <Icon name="globe" size={22} class="text-navy-900" />
+        <h3 class="mt-4 text-base font-semibold">RISC-V International</h3>
+        <p class="mt-2 text-sm text-muted">
+          Specifications, working groups and the wider ecosystem. The authoritative source for the
+          standard itself.
+        </p>
+        <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700">
+          riscv.org
+          <Icon name="arrow-up-right" size={14} />
+        </span>
+      </a>
+    </div>
+  </Section>
+
+  <Section labelledby="contribute-heading" compact>
+    <div class="rounded-lg border border-line bg-surface p-6 sm:p-8">
+      <h2 id="contribute-heading" class="text-xl sm:text-2xl">
+        Contribute material
+      </h2>
+      <p class="mt-3 max-w-2xl text-[1.0625rem] text-muted">
+        If you have taught a course, run a lab or written a tutorial that belongs here, the
+        community would rather publish it than rewrite it. Material stays credited to its author.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <Button href="/join" iconAfter="arrow-right">
+          Ways to contribute
+        </Button>
+        <Button href={site.github.url} variant="secondary" icon="github">
+          OpenCERV
+        </Button>
+      </div>
+    </div>
+  </Section>
+
+  <CTA />
+</BaseLayout>

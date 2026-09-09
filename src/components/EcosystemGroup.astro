@@ -1,0 +1,26 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './Icon.astro';
+
+interface Props {
+  heading: string;
+  icon: IconName;
+  organizations: string[];
+}
+
+const { heading, icon, organizations } = Astro.props;
+---
+
+<div class="rounded-lg border border-line bg-surface p-5 sm:p-6">
+  <h3 class="flex items-center gap-2.5 font-mono text-xs font-semibold tracking-[0.16em] text-navy-900 uppercase">
+    <Icon name={icon} size={17} class="text-crimson-600" />
+    {heading}
+  </h3>
+  <ul class="mt-5 space-y-2">
+    {organizations.map((org) => (
+      <li class="rounded-md border border-line bg-surface-sub px-3.5 py-2.5 text-sm font-medium text-navy-800">
+        {org}
+      </li>
+    ))}
+  </ul>
+</div>

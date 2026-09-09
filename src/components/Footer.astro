@@ -1,0 +1,74 @@
+---
+import { footerNav, site } from '../config/site';
+import { url } from '../lib/paths';
+import Icon from './Icon.astro';
+
+const year = new Date().getFullYear();
+const isExternal = (href: string) => /^https?:/.test(href);
+---
+
+<footer class="mt-24 border-t border-line bg-surface-sub">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="lg:col-span-2">
+        <div class="flex items-center gap-2.5">
+          <span class="h-8 w-1 rounded-full bg-crimson-600" aria-hidden="true"></span>
+          <span class="flex flex-col leading-none">
+            <span class="font-mono text-[0.6875rem] font-medium tracking-[0.14em] text-crimson-700 uppercase">
+              {site.wordmark.top}
+            </span>
+            <span class="mt-1 text-[0.9375rem] font-bold tracking-tight text-navy-900">
+              {site.wordmark.bottom}
+            </span>
+          </span>
+        </div>
+        {site.contact.affiliation && (
+          <p class="mt-4 max-w-sm text-sm text-muted">{site.contact.affiliation}</p>
+        )}
+        <a
+          href={site.github.url}
+          rel="noopener"
+          class="mt-4 inline-flex items-center gap-2 text-sm font-medium text-navy-900 hover:text-crimson-700"
+        >
+          <Icon name="github" size={16} />
+          github.com/{site.github.org}
+        </a>
+      </div>
+
+      {footerNav.map((group) => (
+        <nav aria-label={group.heading}>
+          <h2 class="font-mono text-[0.6875rem] font-semibold tracking-[0.12em] text-muted uppercase">
+            {group.heading}
+          </h2>
+          <ul class="mt-4 space-y-2.5">
+            {group.items.map((item) => (
+              <li>
+                <a
+                  href={isExternal(item.href) ? item.href : url(item.href)}
+                  rel={isExternal(item.href) ? 'noopener' : undefined}
+                  class="inline-flex items-center gap-1.5 text-sm text-muted transition-colors hover:text-crimson-700"
+                >
+                  {item.label}
+                  {isExternal(item.href) && <Icon name="arrow-up-right" size={13} />}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))}
+    </div>
+
+    <div class="mt-12 flex flex-col gap-3 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
+      <p>
+        © {year} {site.name}
+      </p>
+      <a
+        href={url('/activities/rss.xml')}
+        class="inline-flex items-center gap-1.5 hover:text-crimson-700"
+      >
+        <Icon name="rss" size={14} />
+        Activities feed
+      </a>
+    </div>
+  </div>
+</footer>

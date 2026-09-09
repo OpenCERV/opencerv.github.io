@@ -1,0 +1,72 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './Icon.astro';
+import FlowDiagram from './diagrams/FlowDiagram.astro';
+import type { FlowStep } from './diagrams/FlowDiagram.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  icon: IconName;
+  topics: string[];
+  flow: FlowStep[];
+  flowSummary: string;
+  accent: 'navy' | 'crimson';
+}
+
+const { eyebrow, title, icon, topics, flow, flowSummary, accent } = Astro.props;
+
+const ACCENTS = {
+  navy: {
+    rule: 'bg-navy-700',
+    chip: 'border-navy-200 bg-navy-50 text-navy-700',
+    marker: 'text-navy-400',
+  },
+  crimson: {
+    rule: 'bg-crimson-600',
+    chip: 'border-crimson-200 bg-crimson-50 text-crimson-700',
+    marker: 'text-crimson-400',
+  },
+} as const;
+
+const tone = ACCENTS[accent];
+---
+
+<article class="flex flex-col overflow-hidden rounded-lg border border-line bg-surface">
+  <div class:list={['h-1 w-full', tone.rule]} aria-hidden="true"></div>
+
+  <div class="flex flex-1 flex-col p-6 sm:p-7">
+    <div class="flex items-center gap-3">
+      <span
+        class:list={[
+          'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border',
+          tone.chip,
+        ]}
+      >
+        <Icon name={icon} size={21} />
+      </span>
+      <div>
+        <p class="font-mono text-xs font-semibold tracking-[0.16em] text-muted uppercase">
+          {eyebrow}
+        </p>
+        <h3 class="mt-0.5 text-lg sm:text-xl">{title}</h3>
+      </div>
+    </div>
+
+    <ul class="mt-6 space-y-2.5">
+      {topics.map((topic) => (
+        <li class="flex gap-2.5 text-[0.9375rem] leading-snug text-navy-800">
+          <Icon name="check" size={16} class:list={['mt-0.5 shrink-0', tone.marker]} />
+          <span>{topic}</span>
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-auto pt-7">
+      <p class="mb-2.5 font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-muted uppercase">
+        Typical stack
+      </p>
+      <FlowDiagram steps={flow} summary={flowSummary} />
+    </div>
+  </div>
+</article>

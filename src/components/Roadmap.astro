@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+
+const PHASES: { id: string; name: string; items: string[] }[] = [
+  {
+    id: '01',
+    name: 'Foundation',
+    items: [
+      'Website',
+      'Community structure and charter',
+      'OpenCERV governance',
+      'RISC-V International Community Membership',
+    ],
+  },
+  {
+    id: '02',
+    name: 'Activate',
+    items: [
+      'Recurring seminars',
+      'Workshops',
+      'Campus activities',
+      'Co-organised events',
+      'Seed open-source projects',
+    ],
+  },
+  {
+    id: '03',
+    name: 'Scale',
+    items: [
+      'Annual flagship RISC-V Day',
+      'Maintainer and contributor network',
+      'Open project releases',
+      'Regional and international collaboration',
+    ],
+  },
+];
+---
+
+<ol class="grid gap-4 lg:grid-cols-3">
+  {PHASES.map((phase) => (
+    <li class="relative flex flex-col rounded-lg border border-line bg-surface p-5 sm:p-6">
+      <div class="flex items-baseline gap-3">
+        <span class="font-mono text-2xl font-bold tracking-tight text-crimson-600">{phase.id}</span>
+        <h3 class="font-mono text-sm font-semibold tracking-[0.16em] text-navy-900 uppercase">
+          {phase.name}
+        </h3>
+      </div>
+      <ul class="mt-5 space-y-2 border-t border-line pt-4 text-[0.9375rem] text-navy-800">
+        {phase.items.map((item) => (
+          <li class="flex gap-2.5">
+            <span
+              class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-crimson-300"
+              aria-hidden="true"
+            />
+            {item}
+          </li>
+        ))}
+      </ul>
+    </li>
+  ))}
+</ol>
+
+<p class="mt-4 flex items-center justify-center gap-2.5 rounded-lg border border-navy-200 bg-navy-50 px-5 py-4 text-center text-base font-semibold text-navy-900">
+  <Icon name="compass" size={19} class="shrink-0 text-crimson-600" />
+  An Open RISC-V Hub in Hong Kong
+</p>

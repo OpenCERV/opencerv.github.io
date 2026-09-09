@@ -1,0 +1,86 @@
+---
+import { Image } from 'astro:assets';
+import Badge from './Badge.astro';
+import Icon from './Icon.astro';
+import { ACTIVITY_TYPE_META, activityDate, activityDateTime } from '../lib/content';
+import type { Activity } from '../lib/content';
+import { url } from '../lib/paths';
+
+interface Props {
+  activity: Activity;
+}
+
+const { activity } = Astro.props;
+const { data } = activity;
+const type = ACTIVITY_TYPE_META[data.type];
+const dateText = activityDate(data);
+const dateTime = activityDateTime(data);
+const href = url(`/activities/${activity.id}`);
+---
+
+<article class="group relative flex h-full flex-col overflow-hidden rounded-lg border border-line bg-surface transition-colors hover:border-line-strong focus-within:border-crimson-600">
+  {data.cover ? (
+    <Image
+      src={data.cover}
+      alt={data.coverAlt ?? ''}
+      width={640}
+      height={360}
+      class="aspect-16/9 w-full object-cover"
+    />
+  ) : (
+    /* No photograph exists for most entries. Rather than a stock image, the
+         card leads with the date and the activity type set as a header band. */
+    <div class="flex items-center justify-between gap-3 border-b border-line bg-surface-sub px-5 py-3">
+      <time
+        datetime={dateTime}
+        class="font-mono text-sm font-semibold tracking-tight text-navy-800"
+      >
+        {dateText}
+      </time>
+      <Badge icon={type.icon} classes="border-crimson-200 bg-crimson-50 text-crimson-800">
+        {type.label}
+      </Badge>
+    </div>
+  )}
+
+  <div class="flex flex-1 flex-col p-5">
+    {data.cover && (
+      <div class="mb-3 flex items-center justify-between gap-3">
+        <time datetime={dateTime} class="font-mono text-sm font-semibold text-navy-800">
+          {dateText}
+        </time>
+        <Badge icon={type.icon} classes="border-crimson-200 bg-crimson-50 text-crimson-800">
+          {type.label}
+        </Badge>
+      </div>
+    )}
+
+    <h3 class="text-base leading-snug font-semibold text-balance sm:text-lg">
+      <a href={href} class="after:absolute after:inset-0 hover:text-crimson-700">
+        {data.title}
+      </a>
+    </h3>
+
+    <p class="mt-2.5 line-clamp-3 text-sm text-muted">{data.summary}</p>
+
+    <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted">
+      {data.location && (
+        <span class="inline-flex items-center gap-1.5">
+          <Icon name="map-pin" size={13} />
+          {data.location}
+        </span>
+      )}
+      {data.coOrganizers.length > 0 && (
+        <span class="inline-flex items-center gap-1.5">
+          <Icon name="users" size={13} />
+          {data.coOrganizers.join(' · ')}
+        </span>
+      )}
+    </div>
+
+    <p class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700">
+      View details
+      <Icon name="arrow-right" size={15} class="transition-transform group-hover:translate-x-0.5" />
+    </p>
+  </div>
+</article>

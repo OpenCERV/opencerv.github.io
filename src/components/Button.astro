@@ -1,0 +1,55 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './Icon.astro';
+import { url } from '../lib/paths';
+
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'inverse' | 'ghost';
+  size?: 'md' | 'lg';
+  icon?: IconName;
+  /** Places the icon after the label. */
+  iconAfter?: IconName;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  icon,
+  iconAfter,
+  class: className = '',
+} = Astro.props;
+
+const external = /^https?:/.test(href);
+
+const VARIANTS = {
+  primary:
+    'bg-crimson-600 text-white hover:bg-crimson-700 border-crimson-600 hover:border-crimson-700',
+  secondary:
+    'bg-surface text-navy-900 border-line-strong hover:border-navy-900 hover:bg-navy-900 hover:text-white',
+  inverse: 'bg-white text-navy-900 border-white hover:bg-navy-100',
+  ghost: 'bg-transparent text-navy-900 border-transparent hover:bg-surface-sub',
+} as const;
+
+const SIZES = {
+  md: 'px-4 py-2.5 text-sm',
+  lg: 'px-5 py-3 text-base',
+} as const;
+---
+
+<a
+  href={external ? href : url(href)}
+  rel={external ? 'noopener' : undefined}
+  class:list={[
+    'inline-flex items-center justify-center gap-2 rounded-md border font-semibold transition-colors',
+    VARIANTS[variant],
+    SIZES[size],
+    className,
+  ]}
+>
+  {icon && <Icon name={icon} size={size === 'lg' ? 18 : 16} />}
+  <slot />
+  {iconAfter && <Icon name={iconAfter} size={size === 'lg' ? 18 : 16} />}
+</a>

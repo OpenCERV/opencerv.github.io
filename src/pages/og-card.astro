@@ -1,0 +1,87 @@
+---
+import { Font } from 'astro:assets';
+import Icon from '../components/Icon.astro';
+import ChipDiagram from '../components/diagrams/ChipDiagram.astro';
+import SkylineMotif from '../components/diagrams/SkylineMotif.astro';
+import { site } from '../config/site';
+import '../styles/global.css';
+
+/**
+ * Source for `public/og-image.png`, the social preview card.
+ *
+ * This is not a content page — it exists so the card can be re-rendered from
+ * the same design tokens and fonts as the rest of the site instead of being
+ * maintained as a binary nobody can edit. It is excluded from the sitemap and
+ * marked noindex.
+ *
+ * To regenerate the PNG (see README):
+ *   pnpm build && pnpm preview &
+ *   google-chrome --headless --window-size=1200,630 \
+ *     --screenshot=public/og-image.png http://localhost:4321/og-card
+ */
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Social card source</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-jetbrains" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="relative flex h-[630px] w-[1200px] overflow-hidden bg-surface">
+      <div
+        class="pointer-events-none absolute inset-x-0 bottom-0 h-32 opacity-45"
+        aria-hidden="true"
+      >
+        <SkylineMotif />
+      </div>
+      <span class="absolute inset-x-0 top-0 h-2.5 bg-crimson-600" aria-hidden="true"></span>
+
+      <div class="relative flex flex-1 flex-col justify-between p-16 pr-8">
+        <div>
+          <p class="flex items-center gap-3 font-mono text-lg tracking-[0.16em] uppercase">
+            <span class="font-semibold text-crimson-700">{site.wordmark.top}</span>
+            <span class="text-line-strong" aria-hidden="true">
+              /
+            </span>
+            <span class="text-navy-500">{site.wordmark.bottom}</span>
+          </p>
+          <h1 class="mt-8 max-w-[36rem] text-[3.25rem] leading-[1.08] font-bold tracking-tight text-navy-900">
+            {site.headline}
+          </h1>
+        </div>
+
+        <div>
+          <div class="flex gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full border border-navy-200 bg-navy-50 px-4 py-1.5 text-lg font-semibold text-navy-700">
+              <Icon name="chip" size={20} />
+              Edge AI
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-full border border-crimson-200 bg-crimson-50 px-4 py-1.5 text-lg font-semibold text-crimson-800">
+              <Icon name="shield" size={20} />
+              Security
+            </span>
+          </div>
+          <p class="mt-7 flex items-center gap-2.5 font-mono text-lg text-muted">
+            <Icon name="github" size={20} />
+            github.com/{site.github.org}
+          </p>
+        </div>
+      </div>
+
+      <div class="relative flex w-[440px] shrink-0 items-center pr-16">
+        <ChipDiagram />
+      </div>
+    </div>
+  </body>
+</html>

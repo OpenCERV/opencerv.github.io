@@ -1,0 +1,65 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './Icon.astro';
+
+/**
+ * The four things the community actually does. Presented as a plain grid: a
+ * flywheel graphic would add decoration without adding information.
+ */
+const PILLARS: { name: string; summary: string; icon: IconName; examples: string[] }[] = [
+  {
+    name: 'Convene',
+    summary: 'Bring the community together',
+    icon: 'users',
+    examples: ['RISC-V Day', 'Campus Tour', 'Workshops', 'Tutorials', 'Seminars'],
+  },
+  {
+    name: 'Learn',
+    summary: 'Grow the next generation',
+    icon: 'graduation-cap',
+    examples: [
+      'Hands-on training',
+      'Student open-source communities',
+      'Partner-led courses',
+      'Mentoring',
+      'Technical exchange',
+    ],
+  },
+  {
+    name: 'Build',
+    summary: 'Turn participation into open-source output',
+    icon: 'build',
+    examples: ['Code', 'Hardware IP', 'Documentation', 'Benchmarks', 'Demos'],
+  },
+  {
+    name: 'Connect',
+    summary: 'Connect Hong Kong with the global RISC-V ecosystem',
+    icon: 'globe',
+    examples: ['Academia', 'Open-source communities', 'Industry', 'International ecosystem'],
+  },
+];
+---
+
+<ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+  {PILLARS.map((pillar) => (
+    <li class="flex flex-col rounded-lg border border-line bg-surface p-5">
+      <span class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-crimson-200 bg-crimson-50 text-crimson-700">
+        <Icon name={pillar.icon} size={20} />
+      </span>
+
+      <h3 class="mt-4 font-mono text-sm font-semibold tracking-[0.14em] text-navy-900 uppercase">
+        {pillar.name}
+      </h3>
+      <p class="mt-1.5 text-sm font-medium text-navy-700 lg:min-h-10">{pillar.summary}</p>
+
+      <ul class="mt-4 space-y-1.5 border-t border-line pt-4 text-sm text-muted">
+        {pillar.examples.map((example) => (
+          <li class="flex gap-2">
+            <span class="mt-2 h-1 w-1 shrink-0 rounded-full bg-crimson-300" aria-hidden="true" />
+            {example}
+          </li>
+        ))}
+      </ul>
+    </li>
+  ))}
+</ul>

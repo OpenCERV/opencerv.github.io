@@ -1,0 +1,264 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Design tokens
+   ---------------------------------------------------------------------------
+   Every colour in the site comes from this block. Components reference tokens
+   (`bg-crimson-600`, `text-muted`, `border-line`) and never raw hex values, so
+   the whole palette can be retuned here.
+
+   Semantic mapping:
+     primary red     -> crimson-600   headings accents, primary actions
+     primary blue    -> navy-900      dark surfaces, technical headings
+     accent orange   -> accent-500    diagram highlights, small emphasis
+     text            -> ink
+     muted           -> muted
+     surface         -> surface / surface-sub
+--------------------------------------------------------------------------- */
+@theme {
+  /* Primary — deep academic crimson */
+  --color-crimson-50: #fcf3f5;
+  --color-crimson-100: #f9e4e8;
+  --color-crimson-200: #f1c4cc;
+  --color-crimson-300: #e59ba9;
+  --color-crimson-400: #d2647a;
+  --color-crimson-500: #b93a54;
+  --color-crimson-600: #9e1b32;
+  --color-crimson-700: #85142a;
+  --color-crimson-800: #6b1023;
+  --color-crimson-900: #560e1d;
+
+  /* Secondary — deep technical navy */
+  --color-navy-50: #f2f5f9;
+  --color-navy-100: #e3e9f1;
+  --color-navy-200: #c4d0e1;
+  --color-navy-300: #98adc8;
+  --color-navy-400: #6482a6;
+  --color-navy-500: #3f5f87;
+  --color-navy-600: #2a4568;
+  --color-navy-700: #1d3350;
+  --color-navy-800: #15263c;
+  --color-navy-900: #0f1b2d;
+
+  /* Accent — restrained orange, used sparingly */
+  --color-accent-50: #fff7ed;
+  --color-accent-100: #ffedd5;
+  --color-accent-200: #fed7aa;
+  --color-accent-300: #fdba74;
+  --color-accent-400: #fb923c;
+  --color-accent-500: #ef8213;
+  --color-accent-600: #c96a08;
+  --color-accent-700: #9c5107;
+
+  /* Neutrals */
+  --color-ink: #0f1720;
+  --color-muted: #55606d;
+  --color-line: #e4e8ed;
+  --color-line-strong: #cfd6de;
+  --color-surface: #ffffff;
+  --color-surface-sub: #f7f8fa;
+
+  /* Layout */
+  --radius-card: 0.5rem;
+}
+
+/* Font stacks reference the self-hosted families emitted by Astro's Fonts API. */
+@theme inline {
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    color: var(--color-navy-900);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  /* A single, visible focus treatment for every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-crimson-600);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background-color: var(--color-crimson-100);
+    color: var(--color-crimson-900);
+  }
+
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Rendered Markdown
+   Hand-written rather than pulling in @tailwindcss/typography: the site renders
+   a small, known set of elements and this keeps the dependency list short.
+--------------------------------------------------------------------------- */
+@layer components {
+  /*
+   * Skip link. Positioned off-screen rather than clipped, so it stays in the
+   * accessibility tree, stays focusable, and reliably becomes visible on focus.
+   */
+  .skip-link {
+    position: absolute;
+    top: -4rem;
+    left: 0.75rem;
+    z-index: 100;
+    border-radius: 0.375rem;
+    background-color: var(--color-navy-900);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: top 150ms ease-out;
+  }
+
+  .skip-link:focus {
+    top: 0.75rem;
+  }
+
+  .rich-text {
+    color: var(--color-ink);
+    line-height: 1.7;
+  }
+
+  .rich-text > * + * {
+    margin-top: 1.15em;
+  }
+
+  .rich-text h2 {
+    font-size: 1.375rem;
+    margin-top: 2.25em;
+    margin-bottom: -0.3em;
+  }
+
+  .rich-text h3 {
+    font-size: 1.125rem;
+    margin-top: 1.85em;
+    margin-bottom: -0.4em;
+  }
+
+  .rich-text a {
+    color: var(--color-crimson-700);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .rich-text a:hover {
+    color: var(--color-crimson-600);
+  }
+
+  .rich-text ul,
+  .rich-text ol {
+    padding-left: 1.4em;
+  }
+
+  .rich-text ul {
+    list-style: disc;
+  }
+
+  .rich-text ol {
+    list-style: decimal;
+  }
+
+  .rich-text li + li {
+    margin-top: 0.4em;
+  }
+
+  .rich-text li::marker {
+    color: var(--color-crimson-400);
+  }
+
+  .rich-text code {
+    background-color: var(--color-surface-sub);
+    border: 1px solid var(--color-line);
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    padding: 0.1em 0.35em;
+  }
+
+  .rich-text pre {
+    background-color: var(--color-navy-900);
+    border-radius: var(--radius-card);
+    font-size: 0.875rem;
+    overflow-x: auto;
+    padding: 1rem 1.25rem;
+  }
+
+  .rich-text pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+
+  .rich-text blockquote {
+    border-left: 3px solid var(--color-line-strong);
+    color: var(--color-muted);
+    padding-left: 1rem;
+  }
+
+  .rich-text strong {
+    color: var(--color-navy-900);
+    font-weight: 650;
+  }
+
+  .rich-text table {
+    border-collapse: collapse;
+    display: block;
+    overflow-x: auto;
+    width: 100%;
+  }
+
+  .rich-text th,
+  .rich-text td {
+    border: 1px solid var(--color-line);
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+
+  .rich-text th {
+    background-color: var(--color-surface-sub);
+    font-weight: 600;
+  }
+}

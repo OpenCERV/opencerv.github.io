@@ -1,0 +1,71 @@
+---
+import { site } from '../config/site';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import ChipDiagram from './diagrams/ChipDiagram.astro';
+import SkylineMotif from './diagrams/SkylineMotif.astro';
+---
+
+<section class="relative overflow-hidden border-b border-line bg-surface">
+  <div
+    class="pointer-events-none absolute inset-x-0 bottom-0 h-24 opacity-50 sm:h-32"
+    aria-hidden="true"
+  >
+    <SkylineMotif />
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-24 lg:px-8">
+    <div class="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,26rem)] lg:gap-16">
+      <div>
+        <p class="flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-xs tracking-[0.16em] uppercase">
+          <span class="font-semibold text-crimson-700">{site.wordmark.top}</span>
+          <span class="text-line-strong" aria-hidden="true">
+            /
+          </span>
+          <span class="text-navy-500">{site.wordmark.bottom}</span>
+        </p>
+
+        <h1 class="mt-5 text-3xl sm:text-4xl lg:text-[2.875rem] lg:leading-[1.1]">
+          {site.headline}
+        </h1>
+
+        <p class="mt-5 max-w-xl text-lg text-muted">
+          An open community connecting research, education, open-source development and the RISC-V
+          ecosystem in Hong Kong.
+        </p>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-navy-200 bg-navy-50 px-3 py-1 text-xs font-semibold text-navy-700">
+            <Icon name="chip" size={14} />
+            Edge AI
+          </span>
+          <span class="inline-flex items-center gap-1.5 rounded-full border border-crimson-200 bg-crimson-50 px-3 py-1 text-xs font-semibold text-crimson-800">
+            <Icon name="shield" size={14} />
+            Security
+          </span>
+        </div>
+
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <Button href="/projects" size="lg" iconAfter="arrow-right">
+            Explore Projects
+          </Button>
+          <Button href="/join" variant="secondary" size="lg">
+            Join the Community
+          </Button>
+          <a
+            href={site.github.url}
+            rel="noopener"
+            class="inline-flex items-center gap-2 px-1 py-3 text-base font-semibold text-navy-900 underline-offset-4 hover:text-crimson-700 hover:underline"
+          >
+            <Icon name="github" size={18} />
+            {site.github.org}
+          </a>
+        </div>
+      </div>
+
+      <div class="relative mx-auto w-full max-w-md lg:max-w-none">
+        <ChipDiagram />
+      </div>
+    </div>
+  </div>
+</section>

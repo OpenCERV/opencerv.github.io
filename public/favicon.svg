@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="CityUHK-EE RISC-V Open Community">
+  <rect width="32" height="32" rx="7" fill="#9e1b32"/>
+  <!-- die pins -->
+  <g fill="#ffffff" opacity="0.75">
+    <rect x="11" y="3" width="2.5" height="4" rx="1"/>
+    <rect x="18.5" y="3" width="2.5" height="4" rx="1"/>
+    <rect x="11" y="25" width="2.5" height="4" rx="1"/>
+    <rect x="18.5" y="25" width="2.5" height="4" rx="1"/>
+    <rect x="3" y="11" width="4" height="2.5" rx="1"/>
+    <rect x="3" y="18.5" width="4" height="2.5" rx="1"/>
+    <rect x="25" y="11" width="4" height="2.5" rx="1"/>
+    <rect x="25" y="18.5" width="4" height="2.5" rx="1"/>
+  </g>
+  <!-- core -->
+  <rect x="7.5" y="7.5" width="17" height="17" rx="3" fill="none" stroke="#ffffff" stroke-width="2"/>
+  <rect x="13" y="13" width="6" height="6" rx="1.5" fill="#ffffff"/>
+</svg>

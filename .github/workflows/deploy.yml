@@ -1,0 +1,50 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Lets a maintainer redeploy from the Actions tab without pushing.
+  workflow_dispatch:
+
+# Allow the job to read the repo and publish a Pages deployment.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let an in-progress deployment finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Both are optional. Set them as repository variables
+      # (Settings -> Secrets and variables -> Actions -> Variables) to deploy
+      # somewhere other than the organisation site:
+      #   Project site   SITE_URL=https://<org>.github.io   BASE_PATH=/<repo>
+      #   Custom domain  SITE_URL=https://<domain>          BASE_PATH=/
+      # When unset, astro.config.mjs falls back to the organisation-site values.
+      SITE_URL: ${{ vars.SITE_URL }}
+      BASE_PATH: ${{ vars.BASE_PATH }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Build site
+        uses: withastro/action@v6
+        # The package manager is detected from the committed lockfile
+        # (pnpm-lock.yaml), so it does not need to be named here.
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

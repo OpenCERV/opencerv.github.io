@@ -1,0 +1,80 @@
+---
+import Icon from '../Icon.astro';
+import type { IconName } from '../Icon.astro';
+
+/**
+ * A short left-to-right chain of stages that collapses to a vertical stack on
+ * narrow screens. Built from HTML rather than SVG so the labels stay real text:
+ * selectable, translatable and scaling with the reader's font size.
+ */
+export interface FlowStep {
+  label: string;
+  icon?: IconName;
+  /** Relationship to the previous step. Ignored on the first step. */
+  link?: 'to' | 'both';
+  /** Draws the stage as the emphasised one in the chain. */
+  accent?: boolean;
+}
+
+interface Props {
+  steps: FlowStep[];
+  /** Read by assistive technology in place of the arrow glyphs. */
+  summary: string;
+  tone?: 'default' | 'inverse';
+}
+
+const { steps, summary, tone = 'default' } = Astro.props;
+const inverse = tone === 'inverse';
+---
+
+<div>
+  <p class="sr-only">{summary}</p>
+  <ol class="flex flex-col gap-1 sm:flex-row sm:gap-0" aria-hidden="true">
+    {steps.map((step, index) => (
+      <li class="flex flex-1 flex-col sm:flex-row sm:items-center">
+        {index > 0 && (
+          <span class="flex shrink-0 items-center justify-center py-1 sm:px-1.5 sm:py-0">
+            <Icon
+              name={step.link === 'both' ? 'arrows-left-right' : 'arrow-right'}
+              size={16}
+              class:list={[
+                'rotate-90 sm:rotate-0',
+                inverse ? 'text-accent-400' : 'text-crimson-500',
+              ]}
+            />
+          </span>
+        )}
+        <span
+          class:list={[
+            'flex flex-1 items-center gap-2 rounded-md border px-3 py-2.5 text-center text-xs leading-tight font-medium sm:min-h-16 sm:flex-col sm:justify-center sm:gap-1.5 sm:px-2 sm:text-[0.6875rem]',
+            inverse
+              ? step.accent
+                ? 'border-accent-400/60 bg-accent-400/10 text-white'
+                : 'border-white/15 bg-white/5 text-navy-100'
+              : step.accent
+                ? 'border-crimson-200 bg-crimson-50 text-crimson-800'
+                : 'border-line bg-surface text-navy-800',
+          ]}
+        >
+          {step.icon && (
+            <Icon
+              name={step.icon}
+              size={18}
+              class:list={[
+                'shrink-0',
+                inverse
+                  ? step.accent
+                    ? 'text-accent-300'
+                    : 'text-navy-300'
+                  : step.accent
+                    ? 'text-crimson-600'
+                    : 'text-navy-400',
+              ]}
+            />
+          )}
+          <span class="text-left sm:text-center">{step.label}</span>
+        </span>
+      </li>
+    ))}
+  </ol>
+</div>

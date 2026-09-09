@@ -1,0 +1,132 @@
+---
+import { getCollection } from 'astro:content';
+import Button from '../../components/Button.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import Section from '../../components/Section.astro';
+import { site } from '../../config/site';
+import { PROJECT_CATEGORIES } from '../../content.config';
+import {
+  PROJECT_CATEGORY_META,
+  PROJECT_STATUS_META,
+  isPublished,
+  sortProjects,
+} from '../../lib/content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const projects = sortProjects((await getCollection('projects')).filter(isPublished));
+
+const grouped = PROJECT_CATEGORIES.map((category) => ({
+  category,
+  meta: PROJECT_CATEGORY_META[category],
+  entries: projects.filter((project) => project.data.category === category),
+})).filter((group) => group.entries.length > 0);
+
+const allPlaceholders = projects.length > 0 && projects.every((p) => p.data.placeholder);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Open-source projects developed by the CityUHK-EE RISC-V Open Community under the OpenCERV organisation: edge AI, security, community infrastructure and education."
+>
+  <PageHeader
+    eyebrow="OpenCERV"
+    title="Projects"
+    lead="Open-source work developed in the community and published under OpenCERV: reference platforms, hardware IP, benchmarks, tooling and teaching material."
+    motif
+  >
+    <div class="mt-7 flex flex-wrap gap-3">
+      <Button href={site.github.url} icon="github">
+        Explore OpenCERV
+      </Button>
+      <Button href="/join" variant="secondary">
+        Propose a Project
+      </Button>
+    </div>
+  </PageHeader>
+
+  {allPlaceholders && (
+    <div class="border-b border-accent-200 bg-accent-50">
+      <div class="mx-auto flex max-w-6xl gap-3 px-4 py-4 sm:px-6 lg:px-8">
+        <Icon name="file-text" size={19} class="mt-0.5 shrink-0 text-accent-700" />
+        <p class="text-[0.9375rem] text-navy-800">
+          <strong class="font-semibold">Every entry below is a placeholder.</strong> They describe
+          intended scope and show how a project page is structured. No repositories have been
+          published yet, so none of them link to code. They are meant to be replaced.
+        </p>
+      </div>
+    </div>
+  )}
+
+  <Section>
+    {grouped.length > 0 ? (
+      <div class="space-y-14">
+        {grouped.map((group) => (
+          <section aria-labelledby={`category-${group.category}`}>
+            <div class="flex flex-col gap-2 border-b border-line pb-5 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <h2
+                  id={`category-${group.category}`}
+                  class="flex items-center gap-2.5 text-xl sm:text-2xl"
+                >
+                  <span class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-navy-200 bg-navy-50 text-navy-700">
+                    <Icon name={group.meta.icon} size={19} />
+                  </span>
+                  {group.meta.label}
+                </h2>
+                <p class="mt-2.5 max-w-xl text-[0.9375rem] text-muted">{group.meta.blurb}</p>
+              </div>
+              <p class="font-mono text-xs tracking-wide text-muted">
+                {group.entries.length} {group.entries.length === 1 ? 'entry' : 'entries'}
+              </p>
+            </div>
+
+            <ul class="mt-6 grid gap-5 sm:grid-cols-2">
+              {group.entries.map((project) => (
+                <li>
+                  <ProjectCard project={project} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+      </div>
+    ) : (
+      <p class="rounded-lg border border-line bg-surface-sub p-6 text-muted">
+        No projects have been published yet.
+      </p>
+    )}
+
+    <section class="mt-16 rounded-lg border border-line bg-surface-sub p-5 sm:p-7">
+      <h2 class="text-lg font-semibold">What the statuses mean</h2>
+      <dl class="mt-5 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+        {Object.values(PROJECT_STATUS_META).map((value) => (
+          <div class="flex gap-3">
+            <dt class="shrink-0">
+              <span
+                class:list={[
+                  'inline-flex rounded-full border px-2.5 py-1 text-xs font-medium',
+                  value.classes,
+                ]}
+              >
+                {value.label}
+              </span>
+              <span class="sr-only">:</span>
+            </dt>
+            <dd class="text-sm text-muted">{value.description}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  </Section>
+
+  <CTA>
+    <Fragment slot="title">Bring a project to the community</Fragment>
+    <Fragment slot="body">
+      Existing work is welcome, and so is something that only exists as an idea. Projects are
+      developed in the open under the OpenCERV organisation.
+    </Fragment>
+  </CTA>
+</BaseLayout>

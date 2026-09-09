@@ -1,0 +1,29 @@
+---
+/** Page section: consistent vertical rhythm, container width and surface tone. */
+interface Props {
+  id?: string;
+  tone?: 'default' | 'sub' | 'navy';
+  /** Tightens vertical padding for short sections. */
+  compact?: boolean;
+  class?: string;
+  labelledby?: string;
+}
+
+const { id, tone = 'default', compact = false, class: className = '', labelledby } = Astro.props;
+
+const TONES = {
+  default: 'bg-surface',
+  sub: 'bg-surface-sub border-y border-line',
+  navy: 'bg-navy-900 text-navy-100',
+} as const;
+---
+
+<section
+  id={id}
+  aria-labelledby={labelledby}
+  class:list={[TONES[tone], compact ? 'py-12 sm:py-14' : 'py-16 sm:py-20 lg:py-24', className]}
+>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <slot />
+  </div>
+</section>

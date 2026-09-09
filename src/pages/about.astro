@@ -1,0 +1,175 @@
+---
+import CTA from '../components/CTA.astro';
+import Icon from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const ENTITIES = [
+  {
+    name: 'CALAS',
+    role: 'Research foundation',
+    icon: 'flask' as const,
+    body: 'The Architecture Lab for Arithmetic and Security. A research group working on RISC-V, cryptographic hardware, hardware security and AI acceleration. It is where the technical depth comes from.',
+  },
+  {
+    name: 'CityUHK-EE RISC-V Open Community',
+    role: 'People, activities and ecosystem',
+    icon: 'users' as const,
+    body: 'The open community around that research: the events, the people who attend and speak at them, the students who join, and the links outward to the wider RISC-V ecosystem.',
+  },
+  {
+    name: 'OpenCERV',
+    role: 'Open-source collaboration platform',
+    icon: 'git-branch' as const,
+    body: 'The GitHub organisation where community work is developed and published: code, hardware IP, documentation, benchmarks and teaching material.',
+  },
+];
+
+const FOCUS = [
+  {
+    title: 'Edge AI',
+    icon: 'chip' as const,
+    body: 'Hardware-software co-design on RISC-V and FPGA, vector and custom instruction acceleration, lightweight inference, and architectures that fit the power and area budget of a real device.',
+  },
+  {
+    title: 'Security',
+    icon: 'shield' as const,
+    body: 'Cryptographic hardware, post-quantum cryptography, fully homomorphic encryption, secure RISC-V platforms, hardware security and side-channel resilience.',
+  },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="What the CityUHK-EE RISC-V Open Community is, why it was created, how it relates to CALAS, and what OpenCERV is for."
+>
+  <PageHeader
+    eyebrow="About"
+    title="An open RISC-V community, built on research"
+    lead="The CityUHK-EE RISC-V Open Community is an open technical community initiated around the Department of Electrical Engineering at City University of Hong Kong and CALAS, the Architecture Lab for Arithmetic and Security."
+    motif
+  />
+
+  <Section labelledby="why-heading">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
+      <div>
+        <h2 id="why-heading" class="text-2xl sm:text-[1.75rem]">
+          Why it exists
+        </h2>
+      </div>
+      <div class="max-w-2xl space-y-5 text-[1.0625rem] leading-relaxed text-navy-800">
+        <p>
+          Hong Kong has RISC-V research, RISC-V teaching and a run of RISC-V events. What it has had
+          less of is something that holds those together between events — a place where the work
+          stays visible, where students can find a way in, and where results are published rather
+          than presented once and archived.
+        </p>
+        <p>
+          That is the gap this community is meant to fill. It is not a lab homepage and not a
+          publication list. It is a community: people, activities, knowledge, open projects and the
+          links that connect them to the wider RISC-V ecosystem.
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <Section tone="sub" labelledby="structure-heading">
+    <SectionHeading
+      id="structure-heading"
+      eyebrow="How the parts fit"
+      title="Three things, clearly separated"
+      lead="These names get used together, so it is worth being precise about which is which."
+    />
+    <ul class="mt-10 grid gap-5 lg:grid-cols-3">
+      {ENTITIES.map((entity) => (
+        <li class="flex flex-col rounded-lg border border-line bg-surface p-5 sm:p-6">
+          <span class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-crimson-200 bg-crimson-50 text-crimson-700">
+            <Icon name={entity.icon} size={20} />
+          </span>
+          <h3 class="mt-4 text-lg leading-snug font-semibold text-balance">{entity.name}</h3>
+          <p class="mt-1.5 font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-crimson-700 uppercase">
+            {entity.role}
+          </p>
+          <p class="mt-4 border-t border-line pt-4 text-[0.9375rem] text-muted">{entity.body}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-8 rounded-lg border border-navy-200 bg-navy-50 p-5 sm:p-7">
+      <p class="text-[1.0625rem] leading-relaxed text-navy-900">
+        <strong class="font-semibold">CALAS</strong> provides a strong research foundation in
+        RISC-V, cryptographic hardware, hardware security and AI acceleration. The
+        <strong class="font-semibold">CityUHK-EE RISC-V Open Community</strong> turns this
+        foundation into an open platform for technical exchange, education, collaboration and
+        open-source development. <strong class="font-semibold">OpenCERV</strong> provides the
+        technical home for community-built open-source projects.
+      </p>
+    </div>
+  </Section>
+
+  <Section labelledby="focus-heading">
+    <SectionHeading
+      id="focus-heading"
+      eyebrow="Technical focus"
+      title="Where the work is concentrated"
+      lead="Two pillars, and the question of how to have both at once on hardware that has neither power nor area to spare."
+    />
+    <ul class="mt-10 grid gap-5 sm:grid-cols-2">
+      {FOCUS.map((area) => (
+        <li class="rounded-lg border border-line bg-surface p-5 sm:p-6">
+          <h3 class="flex items-center gap-2.5 text-lg font-semibold">
+            <span class="inline-flex h-9 w-9 items-center justify-center rounded-md border border-navy-200 bg-navy-50 text-navy-700">
+              <Icon name={area.icon} size={19} />
+            </span>
+            {area.title}
+          </h3>
+          <p class="mt-4 text-[0.9375rem] text-muted">{area.body}</p>
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section tone="sub" labelledby="goal-heading">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
+      <div>
+        <h2 id="goal-heading" class="text-2xl sm:text-[1.75rem]">
+          What it aims for
+        </h2>
+      </div>
+      <div class="max-w-2xl space-y-5 text-[1.0625rem] leading-relaxed text-navy-800">
+        <p>
+          The long-term goal is an open RISC-V hub in Hong Kong: a standing point of contact between
+          university research, students, open-source developers, industry and the international
+          RISC-V ecosystem.
+        </p>
+        <p>
+          Concretely, that means recurring events people can plan around, teaching material that
+          outlives the course it was written for, and open projects with real maintainers — the kind
+          of output someone outside Hong Kong can pick up and use.
+        </p>
+        <p class="text-muted">
+          Everything the community builds is published under
+          <a
+            href={site.github.url}
+            rel="noopener"
+            class="font-medium text-crimson-700 underline underline-offset-4 hover:text-crimson-600"
+          >
+            {site.github.org}
+          </a>
+          .
+        </p>
+      </div>
+    </div>
+  </Section>
+
+  <CTA>
+    <Fragment slot="title">Work with the community</Fragment>
+    <Fragment slot="body">
+      Students, researchers, engineers, open-source contributors and ecosystem organisations are all
+      welcome. There is more than one way in.
+    </Fragment>
+  </CTA>
+</BaseLayout>

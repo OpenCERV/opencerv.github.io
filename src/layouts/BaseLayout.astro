@@ -1,0 +1,102 @@
+---
+import { Font } from 'astro:assets';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { site } from '../config/site';
+import { absoluteFromPathname, absoluteUrl, url } from '../lib/paths';
+import '../styles/global.css';
+
+interface Props {
+  /** Page name. Composed as "<title> | <site name>" unless `exactTitle` is set. */
+  title: string;
+  description?: string;
+  /** Use the given string verbatim as the document title. */
+  exactTitle?: string;
+  /** Overrides the default social preview image. */
+  image?: string;
+  /** `article` for activity and project detail pages. */
+  ogType?: 'website' | 'article';
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = site.description,
+  exactTitle,
+  image = '/og-image.png',
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
+
+const documentTitle = exactTitle ?? `${title} | ${site.name}`;
+const canonical = absoluteFromPathname(Astro.url.pathname, Astro.site);
+const socialImage = absoluteUrl(image, Astro.site);
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  alternateName: site.shortName,
+  description: site.description,
+  url: absoluteUrl('/', Astro.site),
+  sameAs: [site.github.url],
+};
+---
+
+<!doctype html>
+<html lang={site.locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{documentTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="icon" href={url('/favicon.svg')} type="image/svg+xml" />
+    <link rel="apple-touch-icon" href={url('/favicon.svg')} />
+    <link rel="sitemap" href={url('/sitemap-index.xml')} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title={`${site.name} — Activities`}
+      href={absoluteUrl('/activities/rss.xml', Astro.site)}
+    />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={documentTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:locale" content="en_HK" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={documentTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+
+    <meta name="theme-color" content="#9e1b32" />
+
+    <Font cssVariable="--font-inter" preload />
+    <Font cssVariable="--font-jetbrains" />
+
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(organizationSchema)}
+      is:inline
+    ></script>
+  </head>
+
+  <body class="flex min-h-screen flex-col bg-surface">
+    <a href="#main" class="skip-link">
+      Skip to content
+    </a>
+    <Header />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

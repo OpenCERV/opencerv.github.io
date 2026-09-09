@@ -1,0 +1,130 @@
+---
+import { getCollection } from 'astro:content';
+import ActivityCard from '../../components/ActivityCard.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Section from '../../components/Section.astro';
+import { ACTIVITY_TYPE_META, isPublished, sortActivities } from '../../lib/content';
+import { url } from '../../lib/paths';
+import { ACTIVITY_TYPES } from '../../content.config';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const activities = sortActivities((await getCollection('activities')).filter(isPublished));
+
+/** Only offer a filter for types that actually have entries. */
+const counts = new Map<string, number>();
+for (const activity of activities) {
+  counts.set(activity.data.type, (counts.get(activity.data.type) ?? 0) + 1);
+}
+
+const filters = [
+  { value: 'all', label: 'All', count: activities.length },
+  ...ACTIVITY_TYPES.filter((type) => counts.has(type)).map((type) => ({
+    value: type,
+    label: ACTIVITY_TYPE_META[type].label,
+    count: counts.get(type) ?? 0,
+  })),
+];
+---
+
+<BaseLayout
+  title="Activities"
+  description="RISC-V Days, campus tours, workshops, tutorials and technical seminars run by or with the CityUHK-EE RISC-V Open Community."
+>
+  <PageHeader
+    eyebrow="Community"
+    title="Activities"
+    lead="RISC-V Days, campus tours, workshops, tutorials and technical seminars. Records of past activities are being compiled; entries are added as details are confirmed."
+    motif
+  />
+
+  <Section>
+    {filters.length > 2 && (
+      <div id="activity-filters" hidden>
+        <h2 class="sr-only">Filter activities by type</h2>
+        <div class="flex flex-wrap gap-2" role="group" aria-label="Filter activities by type">
+          {filters.map((filter) => (
+            <button
+              type="button"
+              data-filter={filter.value}
+              data-label={filter.label}
+              aria-pressed={filter.value === 'all' ? 'true' : 'false'}
+              class="inline-flex items-center gap-2 rounded-full border border-line-strong px-3.5 py-1.5 text-sm font-medium text-navy-800 transition-colors hover:border-navy-900 aria-pressed:border-crimson-600 aria-pressed:bg-crimson-600 aria-pressed:text-white"
+            >
+              {filter.label}
+              <span class="font-mono text-[0.6875rem] opacity-70">{filter.count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <p id="activity-filter-status" class="sr-only" role="status" aria-live="polite"></p>
+
+    {activities.length > 0 ? (
+      <ul id="activity-list" class="mt-8 grid list-none gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {activities.map((activity) => (
+          <li data-activity-item data-type={activity.data.type}>
+            <ActivityCard activity={activity} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="mt-8 rounded-lg border border-line bg-surface-sub p-6 text-muted">
+        No activities have been published yet.
+      </p>
+    )}
+
+    <div class="mt-10 flex flex-col gap-3 rounded-lg border border-line bg-surface-sub p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+      <p class="text-sm text-muted">
+        Have material from one of these events, or want to propose a new one?
+      </p>
+      <a
+        href={url('/join')}
+        class="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-crimson-700 hover:text-crimson-600"
+      >
+        Host or co-organise an activity
+        <Icon name="arrow-right" size={15} />
+      </a>
+    </div>
+  </Section>
+
+  <CTA />
+</BaseLayout>
+
+<script>
+  // Filtering is an enhancement: the controls stay hidden until this runs, so
+  // there are never buttons on the page that do nothing.
+  const filterBar = document.getElementById('activity-filters');
+  const list = document.getElementById('activity-list');
+  const status = document.getElementById('activity-filter-status');
+
+  if (filterBar && list) {
+    filterBar.hidden = false;
+    filterBar.classList.add('mb-2');
+
+    const buttons = Array.from(filterBar.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+    const items = Array.from(list.querySelectorAll<HTMLElement>('[data-activity-item]'));
+
+    const apply = (value: string) => {
+      let shown = 0;
+      for (const item of items) {
+        const match = value === 'all' || item.dataset.type === value;
+        item.hidden = !match;
+        if (match) shown += 1;
+      }
+      for (const button of buttons) {
+        button.setAttribute('aria-pressed', String(button.dataset.filter === value));
+      }
+      if (status) {
+        const label = buttons.find((b) => b.dataset.filter === value)?.dataset.label ?? value;
+        status.textContent = `${shown} ${shown === 1 ? 'activity' : 'activities'} shown for ${label}.`;
+      }
+    };
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => apply(button.dataset.filter ?? 'all'));
+    }
+  }
+</script>

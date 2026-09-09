@@ -1,0 +1,193 @@
+---
+import Button from '../components/Button.astro';
+import Icon from '../components/Icon.astro';
+import type { IconName } from '../components/Icon.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import { site } from '../config/site';
+import { url } from '../lib/paths';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+/**
+ * Until a community contact address is configured in src/config/site.ts, every
+ * "get in touch" route points at the GitHub organisation rather than at an
+ * invented address.
+ */
+const hasEmail = site.contact.email.length > 0;
+const contactHref = hasEmail ? `mailto:${site.contact.email}` : site.github.url;
+const contactLabel = hasEmail ? site.contact.email : `github.com/${site.github.org}`;
+
+const AUDIENCES = [
+  { label: 'Students', icon: 'graduation-cap' as const },
+  { label: 'Researchers', icon: 'flask' as const },
+  { label: 'Engineers', icon: 'terminal' as const },
+  { label: 'Open-source contributors', icon: 'git-branch' as const },
+  { label: 'Companies & ecosystem organisations', icon: 'building' as const },
+];
+
+const WAYS: {
+  title: string;
+  icon: IconName;
+  body: string;
+  action: { label: string; href: string };
+}[] = [
+  {
+    title: 'Attend Events',
+    icon: 'calendar',
+    body: 'RISC-V Days, campus tours, workshops, tutorials and seminars. Open to anyone interested, no affiliation required.',
+    action: { label: 'See activities', href: '/activities' },
+  },
+  {
+    title: 'Contribute to OpenCERV',
+    icon: 'github',
+    body: 'Code, hardware IP, documentation, benchmarks and tests. Start with an issue rather than a large first pull request.',
+    action: { label: 'Open the organisation', href: site.github.url },
+  },
+  {
+    title: 'Propose a Project',
+    icon: 'build',
+    body: 'Bring existing work into the community, or propose something that does not exist yet and find people to build it with.',
+    action: { label: 'Propose on GitHub', href: site.github.url },
+  },
+  {
+    title: 'Host or Co-organise an Activity',
+    icon: 'users',
+    body: 'Run a session at your institution or company, or co-organise a larger event with the community.',
+    action: { label: 'Get in touch', href: contactHref },
+  },
+  {
+    title: 'Give a Technical Talk',
+    icon: 'presentation',
+    body: 'Present work on RISC-V, edge AI, cryptographic hardware or hardware security at a seminar or workshop.',
+    action: { label: 'Get in touch', href: contactHref },
+  },
+  {
+    title: 'Collaborate on Education',
+    icon: 'book-open',
+    body: 'Co-develop labs and course material, or reuse and improve what the community has already published.',
+    action: { label: 'Get in touch', href: contactHref },
+  },
+  {
+    title: 'Join as a Student Contributor',
+    icon: 'compass',
+    body: 'Work on a scoped piece of an open project with a mentor, and have the result published under your name.',
+    action: { label: 'Start on GitHub', href: site.github.url },
+  },
+];
+---
+
+<BaseLayout
+  title="Join Us"
+  description="Ways to take part in the CityUHK-EE RISC-V Open Community: attend events, contribute to OpenCERV, propose a project, give a talk or collaborate on education."
+>
+  <PageHeader
+    eyebrow="Take part"
+    title="Join the community"
+    lead="The community is open. There is no membership form and no fee — participation is what makes someone part of it."
+    motif
+  />
+
+  <Section labelledby="audience-heading" compact>
+    <h2
+      id="audience-heading"
+      class="font-mono text-xs font-semibold tracking-[0.16em] text-muted uppercase"
+    >
+      Who this is for
+    </h2>
+    <ul class="mt-5 flex flex-wrap gap-2.5">
+      {AUDIENCES.map((audience) => (
+        <li class="inline-flex items-center gap-2 rounded-full border border-line bg-surface-sub px-3.5 py-2 text-sm font-medium text-navy-800">
+          <Icon name={audience.icon} size={16} class="text-crimson-600" />
+          {audience.label}
+        </li>
+      ))}
+    </ul>
+  </Section>
+
+  <Section tone="sub" labelledby="ways-heading">
+    <SectionHeading
+      id="ways-heading"
+      eyebrow="Ways to participate"
+      title="Pick whichever fits"
+      lead="These are not tiers and there is no order to work through. Most people start with one and pick up others later."
+    />
+
+    <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {WAYS.map((way) => {
+        const external = /^(https?:|mailto:)/.test(way.action.href);
+        return (
+          <li class="group relative flex h-full flex-col rounded-lg border border-line bg-surface p-5 transition-colors hover:border-line-strong focus-within:border-crimson-600">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-crimson-200 bg-crimson-50 text-crimson-700">
+              <Icon name={way.icon} size={20} />
+            </span>
+            <h3 class="mt-4 text-base font-semibold">
+              <a
+                href={external ? way.action.href : url(way.action.href)}
+                rel={external ? 'noopener' : undefined}
+                class="after:absolute after:inset-0 hover:text-crimson-700"
+              >
+                {way.title}
+              </a>
+            </h3>
+            <p class="mt-2 text-sm text-muted">{way.body}</p>
+            <span class="mt-4 inline-flex items-center gap-1.5 pt-1 text-sm font-semibold text-crimson-700">
+              {way.action.label}
+              <Icon
+                name={external ? 'arrow-up-right' : 'arrow-right'}
+                size={14}
+                class="transition-transform group-hover:translate-x-0.5"
+              />
+            </span>
+          </li>
+        );
+      })}
+    </ul>
+  </Section>
+
+  <Section labelledby="contact-heading">
+    <div class="grid gap-10 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16">
+      <div>
+        <h2 id="contact-heading" class="text-2xl sm:text-[1.75rem]">
+          Getting in touch
+        </h2>
+      </div>
+
+      <div class="max-w-2xl">
+        <p class="text-[1.0625rem] leading-relaxed text-navy-800">
+          {hasEmail
+            ? 'For anything that does not fit an issue — co-organising an event, proposing a talk, or an institutional collaboration — email the community directly.'
+            : 'A dedicated community contact address has not been published yet. Until it is, the GitHub organisation is the reliable route: open an issue or a discussion and it will reach the right people.'}
+        </p>
+
+        <div class="mt-6 rounded-lg border border-line bg-surface-sub p-5 sm:p-6">
+          <p class="font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-muted uppercase">
+            {hasEmail ? 'Email' : 'Primary contact route'}
+          </p>
+          <a
+            href={contactHref}
+            rel="noopener"
+            class="mt-2 inline-flex items-center gap-2 text-lg font-semibold text-crimson-700 underline-offset-4 hover:underline"
+          >
+            <Icon name={hasEmail ? 'mail' : 'github'} size={19} />
+            {contactLabel}
+          </a>
+          {site.contact.affiliation && (
+            <p class="mt-4 border-t border-line pt-4 text-sm text-muted">
+              {site.contact.affiliation}
+            </p>
+          )}
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <Button href={site.github.url} icon="github">
+            OpenCERV on GitHub
+          </Button>
+          <Button href="/projects" variant="secondary" iconAfter="arrow-right">
+            Browse projects
+          </Button>
+        </div>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

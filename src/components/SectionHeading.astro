@@ -1,0 +1,66 @@
+---
+import Icon from './Icon.astro';
+import { url } from '../lib/paths';
+
+interface Props {
+  /** Small uppercase label above the title. */
+  eyebrow?: string;
+  title: string;
+  /** One or two sentences under the title. */
+  lead?: string;
+  id?: string;
+  /** Renders the title as h1 on pages where the section is the page header. */
+  as?: 'h1' | 'h2';
+  /** Optional link aligned to the right on wide screens. */
+  action?: { label: string; href: string };
+  tone?: 'default' | 'inverse';
+}
+
+const { eyebrow, title, lead, id, as: Tag = 'h2', action, tone = 'default' }: Props = Astro.props;
+const inverse = tone === 'inverse';
+---
+
+<div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+  <div class="max-w-2xl">
+    {eyebrow && (
+      <p
+        class:list={[
+          'font-mono text-xs font-semibold tracking-[0.16em] uppercase',
+          inverse ? 'text-accent-300' : 'text-crimson-700',
+        ]}
+      >
+        {eyebrow}
+      </p>
+    )}
+    <Tag
+      id={id}
+      class:list={[
+        'mt-2.5 text-2xl sm:text-3xl lg:text-[2rem]',
+        Tag === 'h1' && 'lg:text-4xl',
+        inverse && 'text-white',
+      ]}
+    >
+      {title}
+    </Tag>
+    {lead && (
+      <p class:list={['mt-4 text-base sm:text-lg', inverse ? 'text-navy-200' : 'text-muted']}>
+        {lead}
+      </p>
+    )}
+  </div>
+
+  {action && (
+    <a
+      href={url(action.href)}
+      class:list={[
+        'group inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold transition-colors',
+        inverse
+          ? 'text-accent-300 hover:text-accent-200'
+          : 'text-crimson-700 hover:text-crimson-600',
+      ]}
+    >
+      {action.label}
+      <Icon name="arrow-right" size={16} class="transition-transform group-hover:translate-x-0.5" />
+    </a>
+  )}
+</div>

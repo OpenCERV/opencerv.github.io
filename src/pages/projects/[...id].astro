@@ -1,0 +1,134 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import Badge from '../../components/Badge.astro';
+import Button from '../../components/Button.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import { PROJECT_CATEGORY_META, PROJECT_STATUS_META, isPublished } from '../../lib/content';
+import { url } from '../../lib/paths';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const getStaticPaths = (async () => {
+  const projects = (await getCollection('projects')).filter(isPublished);
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await render(project);
+
+const category = PROJECT_CATEGORY_META[data.category];
+const status = PROJECT_STATUS_META[data.status];
+---
+
+<BaseLayout title={data.title} description={data.summary} ogType="article">
+  <article>
+    <header class="border-b border-line bg-surface-sub">
+      <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        <a
+          href={url('/projects')}
+          class="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-crimson-700"
+        >
+          <Icon name="arrow-right" size={15} class="rotate-180" />
+          All projects
+        </a>
+
+        <div class="mt-6 flex flex-wrap items-center gap-2">
+          <Badge icon={category.icon} classes="border-navy-200 bg-navy-50 text-navy-700">
+            {category.label}
+          </Badge>
+          <Badge classes={status.classes}>{status.label}</Badge>
+          {data.placeholder && (
+            <Badge classes="border-line-strong bg-surface text-muted">Placeholder</Badge>
+          )}
+        </div>
+
+        <h1 class="mt-4 text-3xl text-balance sm:text-4xl">{data.title}</h1>
+        <p class="mt-5 max-w-2xl text-lg text-muted">{data.summary}</p>
+
+        <div class="mt-7 flex flex-wrap gap-3">
+          {data.github ? (
+            <Button href={data.github} icon="github">
+              View repository
+            </Button>
+          ) : (
+            <p class="inline-flex items-center gap-2 rounded-md border border-dashed border-line-strong px-4 py-2.5 text-sm text-muted">
+              <Icon name="github" size={16} />
+              No repository published yet
+            </p>
+          )}
+          {data.docs && (
+            <Button href={data.docs} variant="secondary" icon="book-open">
+              Documentation
+            </Button>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      {data.placeholder && (
+        <aside class="mb-10 rounded-lg border border-accent-200 bg-accent-50 p-5 sm:p-6">
+          <h2 class="flex items-center gap-2 text-base font-semibold text-accent-700">
+            <Icon name="file-text" size={18} />
+            This is a placeholder entry
+          </h2>
+          <p class="mt-2.5 text-[0.9375rem] text-navy-800">
+            It describes intended scope so the shape of a project page is reviewable before any
+            repository exists. Nothing here has shipped. Replace or remove this entry once the real
+            project is published.
+          </p>
+        </aside>
+      )}
+
+      <div class="rich-text">
+        <Content />
+      </div>
+
+      <dl class="mt-12 grid gap-x-8 gap-y-5 border-t border-line pt-8 sm:grid-cols-2">
+        <div>
+          <dt class="font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-muted uppercase">
+            Status
+          </dt>
+          <dd class="mt-1.5 text-[0.9375rem] text-navy-900">
+            <span class="font-semibold">{status.label}</span> — {status.description}
+          </dd>
+        </div>
+        <div>
+          <dt class="font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-muted uppercase">
+            Category
+          </dt>
+          <dd class="mt-1.5 text-[0.9375rem] text-navy-900">{category.label}</dd>
+        </div>
+        {data.maintainers.length > 0 && (
+          <div>
+            <dt class="font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-muted uppercase">
+              Maintainers
+            </dt>
+            <dd class="mt-1.5 text-[0.9375rem] text-navy-900">{data.maintainers.join(', ')}</dd>
+          </div>
+        )}
+        {data.tags.length > 0 && (
+          <div>
+            <dt class="font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-muted uppercase">
+              Tags
+            </dt>
+            <dd class="mt-2 flex flex-wrap gap-1.5">
+              {data.tags.map((tag) => (
+                <span class="rounded border border-line bg-surface-sub px-2 py-0.5 font-mono text-xs text-muted">
+                  {tag}
+                </span>
+              ))}
+            </dd>
+          </div>
+        )}
+      </dl>
+    </div>
+  </article>
+
+  <CTA />
+</BaseLayout>

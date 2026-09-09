@@ -1,0 +1,25 @@
+---
+/**
+ * Abstract skyline line-art. A quiet nod to where the community is based —
+ * deliberately generic geometry, kept faint so it never competes with content.
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 1200 120"
+  fill="none"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  class:list={['h-full w-full', className]}
+>
+  <path
+    d="M0 120 V88 H40 V70 H72 V96 H104 V60 H120 L134 34 L148 60 H176 V82 H208 V52 H240 V74 H272 V44 H288 L300 20 L312 44 H344 V66 H376 V90 H408 V56 H440 V78 H472 V62 H504 V86 H536 V48 H552 L566 26 L580 48 H612 V72 H644 V58 H676 V84 H708 V66 H740 V40 H772 V76 H804 V60 H836 V88 H868 V54 H900 V72 H932 V46 H948 L960 24 L972 46 H1004 V70 H1036 V92 H1068 V64 H1100 V80 H1132 V58 H1164 V86 H1200 V120"
+    class="stroke-navy-200"
+    stroke-width="1.25"
+    stroke-linejoin="round"
+  ></path>
+</svg>

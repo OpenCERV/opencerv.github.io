@@ -1,0 +1,31 @@
+---
+import SkylineMotif from './diagrams/SkylineMotif.astro';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  /** Adds the faint skyline motif — reserved for the top-level section pages. */
+  motif?: boolean;
+}
+
+const { eyebrow, title, lead, motif = false } = Astro.props;
+---
+
+<div class="relative overflow-hidden border-b border-line bg-surface-sub">
+  {motif && (
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-20 opacity-40" aria-hidden="true">
+      <SkylineMotif />
+    </div>
+  )}
+  <div class="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+    {eyebrow && (
+      <p class="font-mono text-xs font-semibold tracking-[0.16em] text-crimson-700 uppercase">
+        {eyebrow}
+      </p>
+    )}
+    <h1 class="mt-2.5 max-w-3xl text-3xl sm:text-4xl">{title}</h1>
+    {lead && <p class="mt-5 max-w-2xl text-lg text-muted">{lead}</p>}
+    <slot />
+  </div>
+</div>

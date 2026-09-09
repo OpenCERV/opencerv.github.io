@@ -1,0 +1,170 @@
+---
+/**
+ * Abstract SoC floorplan used as the hero visual: a RISC-V core flanked by the
+ * community's two technical pillars (an AI accelerator and a crypto
+ * accelerator) over a shared interconnect. Vector geometry only — no imagery,
+ * no third-party marks.
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+
+const topRow = [
+  { x: 44, label: 'AI ACCEL', sub: 'vector / low-bit' },
+  { x: 181, label: 'RISC-V CORE', sub: 'custom ISA ext.', accent: true },
+  { x: 318, label: 'CRYPTO ACCEL', sub: 'PQC / FHE' },
+];
+
+const bottomRow = [
+  { x: 44, label: 'SRAM' },
+  { x: 181, label: 'DMA' },
+  { x: 318, label: 'TRNG' },
+];
+
+const BLOCK_W = 118;
+const pins = [0, 1, 2, 3, 4, 5];
+---
+
+<svg
+  viewBox="0 0 480 380"
+  fill="none"
+  class:list={['h-auto w-full', className]}
+  role="img"
+  aria-labelledby="chip-diagram-title chip-diagram-desc"
+>
+  <title id="chip-diagram-title">RISC-V system-on-chip block diagram</title>
+  <desc id="chip-diagram-desc">
+    A RISC-V core sits between an AI accelerator and a cryptographic accelerator, all connected by a
+    shared on-chip interconnect to SRAM, DMA and a true random number generator.
+  </desc>
+
+  <!-- package pins -->
+  {pins.map((i) => (
+    <>
+      <rect x="6" y={78 + i * 44} width="14" height="10" rx="2" class="fill-navy-200" />
+      <rect x="460" y={78 + i * 44} width="14" height="10" rx="2" class="fill-navy-200" />
+    </>
+  ))}
+
+  <!-- die outline -->
+  <rect
+    x="20"
+    y="20"
+    width="440"
+    height="340"
+    rx="12"
+    class="fill-surface stroke-navy-200"
+    stroke-width="1.5"
+  ></rect>
+  <rect
+    x="32"
+    y="32"
+    width="416"
+    height="316"
+    rx="8"
+    class="stroke-navy-100"
+    stroke-width="1"
+    stroke-dasharray="3 5"
+  ></rect>
+
+  <!-- interconnect bus -->
+  <path d="M44 200 H436" class="stroke-crimson-300" stroke-width="6" stroke-linecap="round"></path>
+  <path
+    d="M44 200 H436"
+    class="stroke-crimson-600"
+    stroke-width="1.5"
+    stroke-linecap="round"
+  ></path>
+  <text
+    x="240"
+    y="190"
+    text-anchor="middle"
+    class="fill-crimson-700 font-mono text-[10px] tracking-[0.14em]"
+  >
+    INTERCONNECT
+  </text>
+
+  <!-- vertical links -->
+  {[103, 240, 377].map((cx) => (
+    <>
+      <path d={`M${cx} 144 V200`} class="stroke-navy-300" stroke-width="1.25" />
+      <path d={`M${cx} 200 V248`} class="stroke-navy-300" stroke-width="1.25" />
+      <circle cx={cx} cy="200" r="3.5" class="fill-crimson-600" />
+    </>
+  ))}
+
+  <!-- lateral links between top blocks -->
+  <path d="M162 107 H181 M299 107 H318" class="stroke-navy-300" stroke-width="1.25"></path>
+
+  <!-- top row -->
+  {topRow.map((block) => (
+    <>
+      <rect
+        x={block.x}
+        y="70"
+        width={BLOCK_W}
+        height="74"
+        rx="6"
+        class:list={[
+          block.accent ? 'fill-crimson-50 stroke-crimson-600' : 'fill-navy-50 stroke-navy-300',
+        ]}
+        stroke-width={block.accent ? 1.75 : 1.25}
+      />
+      <text
+        x={block.x + BLOCK_W / 2}
+        y="103"
+        text-anchor="middle"
+        class:list={[
+          'font-mono text-[11px] font-semibold tracking-[0.06em]',
+          block.accent ? 'fill-crimson-800' : 'fill-navy-800',
+        ]}
+      >
+        {block.label}
+      </text>
+      <text
+        x={block.x + BLOCK_W / 2}
+        y="120"
+        text-anchor="middle"
+        class="fill-navy-400 text-[10px]"
+      >
+        {block.sub}
+      </text>
+    </>
+  ))}
+
+  <!-- bottom row -->
+  {bottomRow.map((block) => (
+    <>
+      <rect
+        x={block.x}
+        y="248"
+        width={BLOCK_W}
+        height="60"
+        rx="6"
+        class="fill-surface-sub stroke-navy-200"
+        stroke-width="1.25"
+      />
+      <text
+        x={block.x + BLOCK_W / 2}
+        y="283"
+        text-anchor="middle"
+        class="fill-navy-700 font-mono text-[11px] tracking-[0.06em]"
+      >
+        {block.label}
+      </text>
+    </>
+  ))}
+
+  <!-- corner index mark, as found on a real die -->
+  <path d="M44 46 h16 M44 46 v16" class="stroke-navy-300" stroke-width="1.5"></path>
+  <text
+    x="436"
+    y="332"
+    text-anchor="end"
+    class="fill-navy-300 font-mono text-[9px] tracking-[0.18em]"
+  >
+    EDGE AI · SECURITY
+  </text>
+</svg>

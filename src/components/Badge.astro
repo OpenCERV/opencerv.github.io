@@ -1,0 +1,24 @@
+---
+import Icon from './Icon.astro';
+import type { IconName } from './Icon.astro';
+
+interface Props {
+  icon?: IconName;
+  /** Pass explicit border/background/text classes to override the default tone. */
+  classes?: string;
+  class?: string;
+}
+
+const { icon, classes, class: className = '' } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium whitespace-nowrap',
+    classes ?? 'border-line-strong bg-surface-sub text-muted',
+    className,
+  ]}
+>
+  {icon && <Icon name={icon} size={13} />}
+  <slot />
+</span>

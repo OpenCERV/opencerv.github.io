@@ -1,0 +1,149 @@
+---
+import { nav, site } from '../config/site';
+import { isActive, url } from '../lib/paths';
+import Icon from './Icon.astro';
+
+const pathname = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 border-b border-line bg-surface/95 backdrop-blur-sm">
+  <div class="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6 lg:h-18 lg:px-8">
+    <a
+      href={url('/')}
+      class="group flex shrink-0 items-center gap-2.5 rounded-sm"
+      aria-label={`${site.name} — home`}
+    >
+      <span class="h-8 w-1 rounded-full bg-crimson-600 lg:h-9" aria-hidden="true"></span>
+      <span class="flex flex-col leading-none">
+        <span class="font-mono text-[0.6875rem] font-medium tracking-[0.14em] text-crimson-700 uppercase">
+          {site.wordmark.top}
+        </span>
+        <span class="mt-1 text-[0.9375rem] font-bold tracking-tight text-navy-900 lg:text-base">
+          {site.wordmark.bottom}
+        </span>
+      </span>
+    </a>
+
+    <nav class="ml-auto hidden lg:block" aria-label="Primary">
+      <ul class="flex items-center gap-1">
+        {nav.map((item) => {
+          const active = isActive(item.href, pathname);
+          return (
+            <li>
+              <a
+                href={url(item.href)}
+                aria-current={active ? 'page' : undefined}
+                class:list={[
+                  'relative block rounded-sm px-3 py-2 text-[0.9375rem] font-medium transition-colors',
+                  active ? 'text-crimson-700' : 'text-muted hover:text-navy-900',
+                ]}
+              >
+                {item.label}
+                {active && (
+                  <span
+                    class="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-crimson-600"
+                    aria-hidden="true"
+                  />
+                )}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+
+    <a
+      href={site.github.url}
+      class="ml-auto hidden items-center gap-2 rounded-md border border-line-strong px-3 py-2 text-sm font-medium text-navy-900 transition-colors hover:border-navy-900 hover:bg-navy-900 hover:text-white sm:inline-flex lg:ml-3"
+      rel="noopener"
+    >
+      <Icon name="github" size={17} />
+      <span>{site.github.org}</span>
+    </a>
+
+    <button
+      type="button"
+      id="nav-toggle"
+      class="ml-auto inline-flex h-10 w-10 items-center justify-center rounded-md border border-line-strong text-navy-900 sm:ml-0 lg:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-nav"
+    >
+      <Icon name="menu" size={20} class="nav-open-icon" />
+      <Icon name="close" size={20} class="nav-close-icon hidden" />
+      <span class="sr-only">Menu</span>
+    </button>
+  </div>
+
+  <div id="mobile-nav" class="hidden border-t border-line bg-surface lg:hidden">
+    <nav class="mx-auto max-w-6xl px-4 py-3 sm:px-6" aria-label="Primary, mobile">
+      <ul class="flex flex-col">
+        {nav.map((item) => {
+          const active = isActive(item.href, pathname);
+          return (
+            <li>
+              <a
+                href={url(item.href)}
+                aria-current={active ? 'page' : undefined}
+                class:list={[
+                  'block border-l-2 py-2.5 pl-3 text-base font-medium transition-colors',
+                  active
+                    ? 'border-crimson-600 text-crimson-700'
+                    : 'border-transparent text-navy-900 hover:border-line-strong',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+        <li class="mt-2 border-t border-line pt-3">
+          <a
+            href={site.github.url}
+            class="inline-flex items-center gap-2 py-1.5 pl-3 text-base font-medium text-navy-900"
+            rel="noopener"
+          >
+            <Icon name="github" size={18} />
+            {site.github.org} on GitHub
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  // Progressive enhancement: without JS the mobile panel stays closed and every
+  // navigation link is still reachable from the footer.
+  const toggle = document.getElementById('nav-toggle');
+  const panel = document.getElementById('mobile-nav');
+
+  if (toggle && panel) {
+    const openIcon = toggle.querySelector('.nav-open-icon');
+    const closeIcon = toggle.querySelector('.nav-close-icon');
+
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      panel.classList.toggle('hidden', !open);
+      openIcon?.classList.toggle('hidden', open);
+      closeIcon?.classList.toggle('hidden', !open);
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Reset when the viewport grows past the mobile breakpoint.
+    const desktop = window.matchMedia('(min-width: 1024px)');
+    desktop.addEventListener('change', (event) => {
+      if (event.matches) setOpen(false);
+    });
+  }
+</script>

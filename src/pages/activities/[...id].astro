@@ -1,0 +1,157 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { Image } from 'astro:assets';
+import { getCollection, render } from 'astro:content';
+import Badge from '../../components/Badge.astro';
+import Button from '../../components/Button.astro';
+import CTA from '../../components/CTA.astro';
+import Icon from '../../components/Icon.astro';
+import { ACTIVITY_TYPE_META, activityDate, activityDateTime, isPublished } from '../../lib/content';
+import { url } from '../../lib/paths';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const getStaticPaths = (async () => {
+  const activities = (await getCollection('activities')).filter(isPublished);
+  return activities.map((activity) => ({
+    params: { id: activity.id },
+    props: { activity },
+  }));
+}) satisfies GetStaticPaths;
+
+const { activity } = Astro.props;
+const { data } = activity;
+const { Content } = await render(activity);
+
+const type = ACTIVITY_TYPE_META[data.type];
+const dateText = activityDate(data);
+const dateTime = activityDateTime(data);
+
+const meta = [
+  { icon: 'calendar' as const, label: 'Date', value: dateText },
+  data.location ? { icon: 'map-pin' as const, label: 'Location', value: data.location } : null,
+  data.organizers.length
+    ? { icon: 'users' as const, label: 'Organisers', value: data.organizers.join(', ') }
+    : null,
+  data.coOrganizers.length
+    ? { icon: 'users' as const, label: 'Co-organisers', value: data.coOrganizers.join(', ') }
+    : null,
+].filter((item) => item !== null);
+
+const links = [
+  ...(data.externalUrl ? [{ label: 'Event page', href: data.externalUrl }] : []),
+  ...data.links,
+];
+---
+
+<BaseLayout title={data.title} description={data.summary} ogType="article">
+  <article>
+    <header class="border-b border-line bg-surface-sub">
+      <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+        <a
+          href={url('/activities')}
+          class="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-crimson-700"
+        >
+          <Icon name="arrow-right" size={15} class="rotate-180" />
+          All activities
+        </a>
+
+        <div class="mt-6 flex flex-wrap items-center gap-2.5">
+          <Badge icon={type.icon} classes="border-crimson-200 bg-crimson-50 text-crimson-800">
+            {type.label}
+          </Badge>
+          <time datetime={dateTime} class="font-mono text-sm font-semibold text-navy-800">
+            {dateText}
+          </time>
+        </div>
+
+        <h1 class="mt-4 text-3xl text-balance sm:text-4xl">{data.title}</h1>
+        <p class="mt-5 max-w-2xl text-lg text-muted">{data.summary}</p>
+      </div>
+    </header>
+
+    <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      {data.cover && (
+        <Image
+          src={data.cover}
+          alt={data.coverAlt ?? ''}
+          width={1280}
+          height={720}
+          class="mb-10 w-full rounded-lg border border-line"
+        />
+      )}
+
+      <dl class="grid gap-x-8 gap-y-5 rounded-lg border border-line bg-surface p-5 sm:grid-cols-2 sm:p-6">
+        {meta.map((item) => (
+          <div>
+            <dt class="flex items-center gap-1.5 font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-muted uppercase">
+              <Icon name={item.icon} size={13} />
+              {item.label}
+            </dt>
+            <dd class="mt-1.5 text-[0.9375rem] font-medium text-navy-900">{item.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div class="rich-text mt-10">
+        <Content />
+      </div>
+
+      {data.detailsPending && (
+        <aside class="mt-10 rounded-lg border border-accent-200 bg-accent-50 p-5 sm:p-6">
+          <h2 class="flex items-center gap-2 text-base font-semibold text-accent-700">
+            <Icon name="file-text" size={18} />
+            Details still being compiled
+          </h2>
+          <p class="mt-2.5 text-[0.9375rem] text-navy-800">
+            The full programme, speakers and materials for this activity have not been recorded on
+            this site yet. Nothing here is a complete account of the event. If you took part and can
+            contribute details, slides or photographs, please open an issue on the community GitHub
+            organisation.
+          </p>
+          <Button href="https://github.com/OpenCERV" variant="secondary" icon="github" class="mt-4">
+            Contribute details
+          </Button>
+        </aside>
+      )}
+
+      {links.length > 0 && (
+        <section class="mt-10">
+          <h2 class="font-mono text-xs font-semibold tracking-[0.16em] text-muted uppercase">
+            Related links
+          </h2>
+          <ul class="mt-4 space-y-2">
+            {links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  rel="noopener"
+                  class="inline-flex items-center gap-2 text-[0.9375rem] font-medium text-crimson-700 hover:text-crimson-600"
+                >
+                  <Icon name="link" size={15} />
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {data.tags.length > 0 && (
+        <section class="mt-10 border-t border-line pt-6">
+          <h2 class="font-mono text-xs font-semibold tracking-[0.16em] text-muted uppercase">
+            Tags
+          </h2>
+          <ul class="mt-3 flex flex-wrap gap-1.5">
+            {data.tags.map((tag) => (
+              <li class="rounded border border-line bg-surface-sub px-2.5 py-1 font-mono text-xs text-muted">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  </article>
+
+  <CTA />
+</BaseLayout>
