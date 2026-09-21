@@ -15,6 +15,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
  * Everything here is marked "Planned" until material actually exists. As items
  * are published, add a `href` and switch `status` to 'available'.
  */
+const external = (href: string) => /^https?:/.test(href);
+
 const AREAS: {
   title: string;
   icon: IconName;
@@ -25,8 +27,9 @@ const AREAS: {
   {
     title: 'Tutorials',
     icon: 'book-open',
-    body: 'Step-by-step material from community tutorials, written up so it is usable after the session ends.',
-    status: 'planned',
+    body: 'Step-by-step material from community tutorials, written up so it is usable after the session ends. Tutorial 1 builds a single-cycle RV32I processor in Verilog.',
+    status: 'available',
+    href: 'https://github.com/OpenCERV/RISC-V_CPU_Tutorial',
   },
   {
     title: 'Course Materials',
@@ -83,7 +86,7 @@ const AREAS: {
       id="areas-heading"
       eyebrow="What will be here"
       title="Resource areas"
-      lead="Each area below is planned rather than published. Nothing is listed as available until it actually exists and has a link."
+      lead="Areas marked Available have material published and linked. The rest are planned — nothing is marked available until it exists and has a link."
     />
 
     <ul class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -104,10 +107,11 @@ const AREAS: {
           {area.href && (
             <a
               href={area.href}
+              rel={external(area.href) ? 'noopener' : undefined}
               class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-crimson-700 hover:text-crimson-600"
             >
               Open
-              <Icon name="arrow-right" size={15} />
+              <Icon name={external(area.href) ? 'arrow-up-right' : 'arrow-right'} size={15} />
             </a>
           )}
         </li>

@@ -35,6 +35,11 @@ const dayNoYearFormatter = new Intl.DateTimeFormat(site.intlLocale, {
   timeZone: 'UTC',
 });
 
+const dayOnlyFormatter = new Intl.DateTimeFormat(site.intlLocale, {
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+
 /**
  * Human-readable date for an activity, degrading gracefully as detail is lost:
  * explicit label -> exact date (or range) -> year only -> unconfirmed.
@@ -43,9 +48,16 @@ export function activityDate(data: Activity['data']): string {
   if (data.dateLabel) return data.dateLabel;
 
   if (data.date && data.endDate) {
+    // Drop whatever the two ends share: "27–28 Oct 2023", "27 Oct – 2 Nov 2023".
     const sameYear = data.date.getUTCFullYear() === data.endDate.getUTCFullYear();
-    const start = sameYear ? dayNoYearFormatter.format(data.date) : dayFormatter.format(data.date);
-    return `${start} – ${dayFormatter.format(data.endDate)}`;
+    const sameMonth = sameYear && data.date.getUTCMonth() === data.endDate.getUTCMonth();
+    const start = sameMonth
+      ? dayOnlyFormatter.format(data.date)
+      : sameYear
+        ? dayNoYearFormatter.format(data.date)
+        : dayFormatter.format(data.date);
+    const separator = sameMonth ? '–' : ' – ';
+    return `${start}${separator}${dayFormatter.format(data.endDate)}`;
   }
 
   if (data.date) return dayFormatter.format(data.date);
