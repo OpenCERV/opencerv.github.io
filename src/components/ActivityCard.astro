@@ -20,13 +20,7 @@ const href = url(`/activities/${activity.id}`);
 
 <article class="group relative flex h-full flex-col overflow-hidden rounded-lg border border-line bg-surface transition-colors hover:border-line-strong focus-within:border-crimson-600">
   {data.cover ? (
-    <Image
-      src={data.cover}
-      alt={data.coverAlt ?? ''}
-      width={640}
-      height={360}
-      class="aspect-16/9 w-full object-cover"
-    />
+    <Image src={data.cover} alt={data.coverAlt ?? ''} width={640} class="h-auto w-full" />
   ) : (
     /* No photograph exists for most entries. Rather than a stock image, the
          card leads with the date and the activity type set as a header band. */

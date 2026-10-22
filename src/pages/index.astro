@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import ActivityCard from '../components/ActivityCard.astro';
 import Button from '../components/Button.astro';
 import CTA from '../components/CTA.astro';
@@ -7,6 +7,7 @@ import CommunityModel from '../components/CommunityModel.astro';
 import EcosystemGroup from '../components/EcosystemGroup.astro';
 import Hero from '../components/Hero.astro';
 import Icon from '../components/Icon.astro';
+import LaunchNews from '../components/LaunchNews.astro';
 import PillarCard from '../components/PillarCard.astro';
 import Roadmap from '../components/Roadmap.astro';
 import Section from '../components/Section.astro';
@@ -20,6 +21,7 @@ const activities = sortActivities((await getCollection('activities')).filter(isP
   0,
   3,
 );
+const launch = await getEntry('activities', 'risc-v-hong-kong-day-2026-opencerv-launch');
 
 const OPENCERV_TRACKS = [
   {
@@ -79,6 +81,7 @@ const ECOSYSTEM = [
   description={site.description}
 >
   <Hero />
+  {launch && isPublished(launch) && <LaunchNews activity={launch} />}
 
   <!-- Two technical pillars -->
   <Section labelledby="pillars-heading">
