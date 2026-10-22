@@ -43,6 +43,7 @@ const activities = defineCollection({
         /** Real photographs only. Drop a file next to the entry and reference it. */
         cover: image().optional(),
         coverAlt: z.string().optional(),
+        coverCaption: z.string().optional(),
 
         featured: z.boolean().default(false),
         organizers: z.array(z.string()).default([]),

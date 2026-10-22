@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import type { Activity } from '../lib/content';
+import { activityDate, activityDateTime } from '../lib/content';
+import { url } from '../lib/paths';
+import Button from './Button.astro';
+
+interface Props {
+  activity: Activity;
+}
+
+const { activity } = Astro.props;
+const { data } = activity;
+---
+
+<section
+  aria-labelledby="launch-news-heading"
+  class="border-b border-line bg-surface-sub py-12 sm:py-16"
+>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+      <p class="font-mono text-xs font-semibold tracking-[0.16em] text-crimson-700 uppercase">
+        Community news
+      </p>
+      <time datetime={activityDateTime(data)} class="font-mono text-xs text-muted">
+        {activityDate(data)}
+      </time>
+    </div>
+    <article class="overflow-hidden rounded-lg border border-line bg-surface">
+      {data.cover && (
+        <figure class="border-b border-line">
+          <a href={url(`/activities/${activity.id}`)} class="block">
+            <Image
+              src={data.cover}
+              alt={data.coverAlt ?? ''}
+              width={1920}
+              widths={[640, 960, 1280, 1920]}
+              sizes="(max-width: 1152px) 100vw, 1088px"
+              class="h-auto w-full"
+            />
+          </a>
+          {data.coverCaption && (
+            <figcaption class="px-5 py-3 text-xs text-muted sm:px-8">
+              {data.coverCaption}
+            </figcaption>
+          )}
+        </figure>
+      )}
+      <div class="grid gap-6 p-5 sm:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-12">
+        <div>
+          <h2 id="launch-news-heading" class="text-2xl sm:text-3xl">
+            OpenCERV launches at RISC-V Hong Kong Day 2026
+          </h2>
+          <p class="mt-4 max-w-3xl text-base text-muted">{data.summary}</p>
+        </div>
+        <Button
+          href={`/activities/${activity.id}`}
+          iconAfter="arrow-right"
+          class="justify-self-start"
+        >
+          Read the launch recap
+        </Button>
+      </div>
+    </article>
+  </div>
+</section>

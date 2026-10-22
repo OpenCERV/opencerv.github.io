@@ -20,6 +20,7 @@ export const getStaticPaths = (async () => {
 
 const { activity } = Astro.props;
 const { data } = activity;
+const isLaunch = activity.id === 'risc-v-hong-kong-day-2026-opencerv-launch';
 const { Content } = await render(activity);
 
 const type = ACTIVITY_TYPE_META[data.type];
@@ -46,7 +47,12 @@ const links = [
 <BaseLayout title={data.title} description={data.summary} ogType="article">
   <article>
     <header class="border-b border-line bg-surface-sub">
-      <div class="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
+      <div
+        class:list={[
+          'mx-auto px-4 py-10 sm:px-6 sm:py-14 lg:px-8',
+          isLaunch ? 'max-w-6xl' : 'max-w-4xl',
+        ]}
+      >
         <a
           href={url('/activities')}
           class="inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-crimson-700"
@@ -64,20 +70,37 @@ const links = [
           </time>
         </div>
 
-        <h1 class="mt-4 text-3xl text-balance sm:text-4xl">{data.title}</h1>
+        <h1
+          class:list={[
+            'mt-4 text-3xl text-balance sm:text-4xl',
+            isLaunch && 'lg:text-[2rem] lg:whitespace-nowrap',
+          ]}
+        >
+          {data.title
+            .split(/(RISC-V)/g)
+            .map((part) =>
+              part === 'RISC-V' ? <span class="whitespace-nowrap">{part}</span> : part,
+            )}
+        </h1>
         <p class="mt-5 max-w-2xl text-lg text-muted">{data.summary}</p>
       </div>
     </header>
 
     <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       {data.cover && (
-        <Image
-          src={data.cover}
-          alt={data.coverAlt ?? ''}
-          width={1280}
-          height={720}
-          class="mb-10 w-full rounded-lg border border-line"
-        />
+        <figure class="mb-10">
+          <Image
+            src={data.cover}
+            alt={data.coverAlt ?? ''}
+            width={1920}
+            widths={[640, 960, 1280, 1920]}
+            sizes="(max-width: 896px) 100vw, 832px"
+            class="h-auto w-full rounded-lg border border-line"
+          />
+          {data.coverCaption && (
+            <figcaption class="mt-3 text-sm text-muted">{data.coverCaption}</figcaption>
+          )}
+        </figure>
       )}
 
       <dl class="grid gap-x-8 gap-y-5 rounded-lg border border-line bg-surface p-5 sm:grid-cols-2 sm:p-6">
