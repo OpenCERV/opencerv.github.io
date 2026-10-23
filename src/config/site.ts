@@ -37,6 +37,12 @@ export const site = {
     url: 'https://github.com/OpenCERV',
   },
 
+  /** Public registration form only. Keep the private response sheet off the site. */
+  registration: {
+    formUrl:
+      'https://docs.google.com/forms/d/e/1FAIpQLSfO1Bmu-KXRviRkMfHiipIOGuyan2A6zYGMSiGe8ZfB7o37JA/viewform',
+  },
+
   /**
    * Contact routes.
    *
