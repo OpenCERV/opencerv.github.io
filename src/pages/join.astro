@@ -84,9 +84,36 @@ const WAYS: {
   <PageHeader
     eyebrow="Take part"
     title="Join the community"
-    lead="The community is open. There is no membership form and no fee — participation is what makes someone part of it."
+    lead="OpenCERV welcomes anyone interested in RISC-V, Edge AI and Security. Register your interest to connect with the community. There is no membership fee."
     motif
   />
+
+  {site.registration.formUrl && (
+    <Section labelledby="registration-heading" compact>
+      <div class="grid gap-8 rounded-lg border border-line bg-surface-sub p-6 sm:p-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
+        <div class="max-w-2xl">
+          <h2 id="registration-heading" class="text-2xl sm:text-[1.75rem]">
+            Register your interest
+          </h2>
+          <p class="mt-3 text-[1.0625rem] leading-relaxed text-navy-800">
+            Tell us a little about yourself and what you would like to explore or contribute. Our
+            maintainers may contact you about OpenCERV activities and opportunities to participate.
+          </p>
+          <p class="mt-3 text-sm leading-relaxed text-muted">
+            The form asks for your name and email, with optional affiliation and interests. CityUHK
+            students can also provide their Student ID and EID. Responses are kept private and
+            accessible only to authorised OpenCERV maintainers.
+          </p>
+        </div>
+        <div>
+          <Button href={site.registration.formUrl} size="lg" iconAfter="arrow-up-right">
+            Join OpenCERV
+          </Button>
+          <p class="mt-3 text-sm text-muted">Opens Google Forms · About 2 minutes</p>
+        </div>
+      </div>
+    </Section>
+  )}
 
   <Section labelledby="audience-heading" compact>
     <h2
