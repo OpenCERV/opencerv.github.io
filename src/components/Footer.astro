@@ -25,6 +25,17 @@ const isExternal = (href: string) => /^https?:/.test(href);
         {site.contact.affiliation && (
           <p class="mt-4 max-w-sm text-sm text-muted">{site.contact.affiliation}</p>
         )}
+        {site.contact.email && (
+          <p class="mt-4">
+            <a
+              href={`mailto:${site.contact.email}`}
+              class="inline-flex items-center gap-2 text-sm font-medium text-navy-900 hover:text-crimson-700"
+            >
+              <Icon name="mail" size={16} />
+              {site.contact.email}
+            </a>
+          </p>
+        )}
         <a
           href={site.github.url}
           rel="noopener"
