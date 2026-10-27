@@ -43,16 +43,9 @@ export const site = {
       'https://docs.google.com/forms/d/e/1FAIpQLSfO1Bmu-KXRviRkMfHiipIOGuyan2A6zYGMSiGe8ZfB7o37JA/viewform',
   },
 
-  /**
-   * Contact routes.
-   *
-   * `email` is intentionally empty: no address has been confirmed for the
-   * community yet, and the site must not present an invented one. Set it to a
-   * real address and every contact affordance on the site turns on
-   * automatically (Join page, footer, activity proposals).
-   */
+  /** Community contact routes, shared by the Join page and site footer. */
   contact: {
-    email: '', // TODO: set the community contact address, e.g. 'riscv@example.edu.hk'
+    email: 'opencerv@gmail.com',
     /** Optional physical affiliation line, shown in the footer when set. */
     affiliation: 'Department of Electrical Engineering, City University of Hong Kong',
   },
