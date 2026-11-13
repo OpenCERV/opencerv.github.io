@@ -29,17 +29,17 @@ const allPlaceholders = projects.length > 0 && projects.every((p) => p.data.plac
 
 <BaseLayout
   title="Projects"
-  description="Open-source projects developed by the CityUHK-EE RISC-V Open Community under the OpenCERV organisation: edge AI, security, community infrastructure and education."
+  description="Open-source projects from the CityUHK-EE RISC-V Open Community (OpenCERV) in edge AI, security, community infrastructure and education."
 >
   <PageHeader
     eyebrow="OpenCERV"
     title="Projects"
-    lead="Open-source work developed in the community and published under OpenCERV: reference platforms, hardware IP, benchmarks, tooling and teaching material."
+    lead="Explore OpenCERV’s open-source reference platforms, hardware IP, benchmarks, tooling and teaching materials."
     motif
   >
     <div class="mt-7 flex flex-wrap gap-3">
       <Button href={site.github.url} icon="github">
-        Explore OpenCERV
+        OpenCERV on GitHub
       </Button>
       <Button href="/join" variant="secondary">
         Propose a Project
@@ -126,7 +126,7 @@ const allPlaceholders = projects.length > 0 && projects.every((p) => p.data.plac
     <Fragment slot="title">Bring a project to the community</Fragment>
     <Fragment slot="body">
       Existing work is welcome, and so is something that only exists as an idea. Projects are
-      developed in the open under the OpenCERV organisation.
+      developed in the open on OpenCERV’s GitHub.
     </Fragment>
   </CTA>
 </BaseLayout>
