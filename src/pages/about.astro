@@ -9,22 +9,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const ENTITIES = [
   {
+    name: 'OpenCERV',
+    role: site.name,
+    icon: 'users' as const,
+    body: 'OpenCERV brings students, researchers and developers together through RISC-V events, education and collaboration. The community publishes its code, hardware IP, benchmarks and teaching materials on GitHub.',
+  },
+  {
     name: 'CALAS',
     role: 'Research foundation',
     icon: 'flask' as const,
-    body: 'The CityUHK Architecture Laboratory for Arithmetic and Security. A research group working on RISC-V, cryptographic hardware, hardware security and AI acceleration. It is where the technical depth comes from.',
-  },
-  {
-    name: 'CityUHK-EE RISC-V Open Community',
-    role: 'People, activities and ecosystem',
-    icon: 'users' as const,
-    body: 'The open community around that research: the events, the people who attend and speak at them, the students who join, and the links outward to the wider RISC-V ecosystem.',
-  },
-  {
-    name: 'OpenCERV',
-    role: 'Open-source collaboration platform',
-    icon: 'git-branch' as const,
-    body: 'The GitHub organisation where community work is developed and published: code, hardware IP, documentation, benchmarks and teaching material.',
+    body: 'The CityUHK Architecture Laboratory for Arithmetic and Security provides the research foundation for OpenCERV through its work on RISC-V, hardware security and AI acceleration.',
   },
 ];
 
@@ -44,12 +38,12 @@ const FOCUS = [
 
 <BaseLayout
   title="About"
-  description="Learn about the CityUHK-EE RISC-V Open Community, its advisor Prof. Ray Cheung, and the CALAS research team."
+  description="Learn about the CityUHK-EE RISC-V Open Community (OpenCERV), its advisor Prof. Ray Cheung, and the CALAS research team."
 >
   <PageHeader
     eyebrow="About"
     title="An open RISC-V community, built on research"
-    lead="The CityUHK-EE RISC-V Open Community is an open technical community initiated around the Department of Electrical Engineering at City University of Hong Kong and the Architecture Laboratory for Arithmetic and Security (CALAS)."
+    lead="The CityUHK-EE RISC-V Open Community (OpenCERV) grew out of work in the Department of Electrical Engineering at City University of Hong Kong and the Architecture Laboratory for Arithmetic and Security (CALAS)."
     motif
   />
 
@@ -117,13 +111,8 @@ const FOCUS = [
   </Section>
 
   <Section labelledby="structure-heading">
-    <SectionHeading
-      id="structure-heading"
-      eyebrow="How the parts fit"
-      title="Three things, clearly separated"
-      lead="These names get used together, so it is worth being precise about which is which."
-    />
-    <ul class="mt-10 grid gap-5 lg:grid-cols-3">
+    <SectionHeading id="structure-heading" title="OpenCERV and CALAS" />
+    <ul class="mt-8 grid gap-5 sm:grid-cols-2">
       {ENTITIES.map((entity) => (
         <li class="flex flex-col rounded-lg border border-line bg-surface p-5 sm:p-6">
           <span class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-crimson-200 bg-crimson-50 text-crimson-700">
@@ -137,17 +126,6 @@ const FOCUS = [
         </li>
       ))}
     </ul>
-
-    <div class="mt-8 rounded-lg border border-navy-200 bg-navy-50 p-5 sm:p-7">
-      <p class="text-[1.0625rem] leading-relaxed text-navy-900">
-        <strong class="font-semibold">CALAS</strong> provides a strong research foundation in
-        RISC-V, cryptographic hardware, hardware security and AI acceleration. The{' '}
-        <strong class="font-semibold">CityUHK-EE RISC-V Open Community</strong> turns this
-        foundation into an open platform for technical exchange, education, collaboration and
-        open-source development. <strong class="font-semibold">OpenCERV</strong> provides the
-        technical home for community-built open-source projects.
-      </p>
-    </div>
   </Section>
 
   <Section labelledby="focus-heading">
