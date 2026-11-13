@@ -12,7 +12,7 @@ const ENTITIES = [
     name: 'CALAS',
     role: 'Research foundation',
     icon: 'flask' as const,
-    body: 'The Architecture Lab for Arithmetic and Security. A research group working on RISC-V, cryptographic hardware, hardware security and AI acceleration. It is where the technical depth comes from.',
+    body: 'The CityUHK Architecture Laboratory for Arithmetic and Security. A research group working on RISC-V, cryptographic hardware, hardware security and AI acceleration. It is where the technical depth comes from.',
   },
   {
     name: 'CityUHK-EE RISC-V Open Community',
@@ -44,12 +44,12 @@ const FOCUS = [
 
 <BaseLayout
   title="About"
-  description="What the CityUHK-EE RISC-V Open Community is, why it was created, how it relates to CALAS, and what OpenCERV is for."
+  description="Learn about the CityUHK-EE RISC-V Open Community, its advisor Prof. Ray Cheung, and the CALAS research team."
 >
   <PageHeader
     eyebrow="About"
     title="An open RISC-V community, built on research"
-    lead="The CityUHK-EE RISC-V Open Community is an open technical community initiated around the Department of Electrical Engineering at City University of Hong Kong and CALAS, the Architecture Lab for Arithmetic and Security."
+    lead="The CityUHK-EE RISC-V Open Community is an open technical community initiated around the Department of Electrical Engineering at City University of Hong Kong and the Architecture Laboratory for Arithmetic and Security (CALAS)."
     motif
   />
 
@@ -76,7 +76,47 @@ const FOCUS = [
     </div>
   </Section>
 
-  <Section tone="sub" labelledby="structure-heading">
+  <Section id="team" tone="sub" labelledby="team-heading" class="scroll-mt-20">
+    <SectionHeading id="team-heading" title="Advisor and research team" />
+    <div class="mt-8 grid gap-5 sm:grid-cols-2">
+      <div class="flex flex-col rounded-lg border border-line bg-surface p-5 sm:p-6">
+        <p class="font-mono text-xs font-semibold tracking-[0.14em] text-crimson-700 uppercase">
+          OpenCERV advisor
+        </p>
+        <h3 class="mt-2 text-xl font-semibold">Prof. Ray C. C. Cheung</h3>
+        <p class="mt-3 text-[0.9375rem] text-muted">
+          Associate Provost (Digital Learning) and Professor in the Department of Electrical
+          Engineering, City University of Hong Kong. He is also an affiliate professor in the
+          Department of Computer Science and the director of CALAS.
+        </p>
+        <a
+          href="https://scholars.cityu.edu.hk/en/persons/racheung/"
+          class="mt-auto inline-flex items-center gap-1.5 self-start pt-5 text-sm font-semibold text-crimson-700 hover:underline"
+        >
+          View CityUHK profile <Icon name="arrow-up-right" size={15} />
+        </a>
+      </div>
+      <div class="flex flex-col rounded-lg border border-line bg-surface p-5 sm:p-6">
+        <p class="font-mono text-xs font-semibold tracking-[0.14em] text-crimson-700 uppercase">
+          Research team
+        </p>
+        <h3 class="mt-2 text-xl font-semibold">CALAS</h3>
+        <p class="mt-3 text-[0.9375rem] text-muted">
+          The CityUHK Architecture Laboratory for Arithmetic and Security provides the research
+          foundation for OpenCERV. The team works on RISC-V, cryptographic hardware and AI hardware
+          design.
+        </p>
+        <a
+          href="https://cityuhk-calas.github.io/people/"
+          class="mt-auto inline-flex items-center gap-1.5 self-start pt-5 text-sm font-semibold text-crimson-700 hover:underline"
+        >
+          Meet the CALAS team <Icon name="arrow-up-right" size={15} />
+        </a>
+      </div>
+    </div>
+  </Section>
+
+  <Section labelledby="structure-heading">
     <SectionHeading
       id="structure-heading"
       eyebrow="How the parts fit"
